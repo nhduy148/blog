@@ -22,7 +22,7 @@ export class Sidebar extends Component {
 
             <div class="widget_article_social">
               <span>
-                <Link to="single.html" target="_self"> <i class="fa fa-share-alt"></i>424</Link> Shares
+                <Link to="single.html" target="_self"> <i class="fa fa-eye"></i>424</Link> Views
               </span>
               <span>
                 <Link to="single.html" target="_self"><i class="fa fa-comments-o"></i>4</Link> Comments
@@ -43,7 +43,7 @@ export class Sidebar extends Component {
 
             <div class="widget_article_social">
               <span>
-                <Link to="single.html" target="_self"> <i class="fa fa-share-alt"></i>424</Link> Shares
+                <Link to="single.html" target="_self"> <i class="fa fa-eye"></i>424</Link> Views
               </span>
               <span>
                 <Link to="single.html" target="_self"><i class="fa fa-comments-o"></i>4</Link> Comments
@@ -64,7 +64,7 @@ export class Sidebar extends Component {
 
             <div class="widget_article_social">
               <span>
-                <Link to="single.html" target="_self"> <i class="fa fa-share-alt"></i>424</Link> Shares
+                <Link to="single.html" target="_self"> <i class="fa fa-eye"></i>424</Link> Views
               </span>
               <span>
                 <Link to="single.html" target="_self"><i class="fa fa-comments-o"></i>4</Link> Comments
@@ -85,7 +85,7 @@ export class Sidebar extends Component {
 
             <div class="widget_article_social">
               <span>
-                <Link to="single.html" target="_self"><i class="fa fa-share-alt"></i>424</Link> Shares
+                <Link to="single.html" target="_self"><i class="fa fa-eye"></i>424</Link> Views
               </span>
               <span>
                 <Link to="single.html" target="_self"><i class="fa fa-comments-o"></i>4</Link> Comments

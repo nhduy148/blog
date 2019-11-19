@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-require('dotenv').config();
+require('dotenv').config()
 const port = process.env.PORT || 5000
 
 var bodyParser = require('body-parser');
@@ -15,9 +15,10 @@ app.use(bodyParser.raw());
 app.use(bodyParser.json());
 
 app.use(express.urlencoded({ extended: false }));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
-let routes = require('./routes');
+let routes = require('./routes/blog.route');
 routes(app);
 
 app.use( (req, res, next) => {
@@ -28,7 +29,7 @@ app.use( (req, res, next) => {
 	// res.setHeader("Content-Type", "text/plain");
 	// res.setHeader("Content-Type", "application/json");
 
-  res.status(400).send({ url: req.originalUrl+' not found!'});
+  res.status(400).send({ error: 'URL: '+req.originalUrl+' not found!'});
   next();
 })
 

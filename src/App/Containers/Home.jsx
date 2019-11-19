@@ -4,12 +4,14 @@ import Footer from '../Layout/Footer'
 
 import { Link } from 'react-router-dom';
 import { Sidebar } from '../Layout/Sidebar';
+import Feature from '../Components/Home/Feature';
 
 export default class Home extends Component {
   render() {
     return (
       <>
-        <Header />        
+        <Header />
+        <Feature />      
         <section id="category_section" class="category_section">
           <div class="container">
             <div class="row">
@@ -47,7 +49,7 @@ export default class Home extends Component {
                         </div>
                         {/* <!----category_article_content------> */}
                         <div class="media_social">
-                          <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                          <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                           <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                         </div>
                         {/* <!----media_social------> */}
@@ -70,7 +72,7 @@ export default class Home extends Component {
                             <span class="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
 
                             <div class="media_social">
-                              <span><Link to="#"><i class="fa fa-share-alt"></i>424</Link> Shares</span>
+                              <span><Link to="#"><i class="fa fa-eye"></i>424</Link> Views</span>
                               <span><Link to="#"><i class="fa fa-comments-o"></i>4</Link> Comments</span>
                             </div>
                           </div>
@@ -88,7 +90,7 @@ export default class Home extends Component {
                             <span class="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
 
                             <div class="media_social">
-                              <span><Link to="#"><i class="fa fa-share-alt"></i>424</Link> Shares</span>
+                              <span><Link to="#"><i class="fa fa-eye"></i>424</Link> Views</span>
                               <span><Link to="#"><i class="fa fa-comments-o"></i>4</Link> Comments</span>
                             </div>
                           </div>
@@ -109,7 +111,7 @@ export default class Home extends Component {
                             <span class="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
 
                             <div class="media_social">
-                              <span><Link to="#"><i class="fa fa-share-alt"></i>424</Link> Shares</span>
+                              <span><Link to="#"><i class="fa fa-eye"></i>424</Link> Views</span>
                               <span><Link to="#"><i class="fa fa-comments-o"></i>4</Link> Comments</span>
                             </div>
                           </div>
@@ -127,7 +129,7 @@ export default class Home extends Component {
                             <span class="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
 
                             <div class="media_social">
-                              <span><Link to="#"><i class="fa fa-share-alt"></i>424</Link> Shares</span>
+                              <span><Link to="#"><i class="fa fa-eye"></i>424</Link> Views</span>
                               <span><Link to="#"><i class="fa fa-comments-o"></i>4</Link> Comments</span>
                             </div>
                           </div>
@@ -175,7 +177,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="media_social">
-                            <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                            <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                           </div>
                           {/* <!-- media_social --> */}
@@ -214,7 +216,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="media_social">
-                            <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                            <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                           </div>
                           {/* <!-- media_social --> */}
@@ -268,7 +270,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="media_social">
-                            <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                            <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                           </div>
                           {/* <!-- media_social --> */}
@@ -289,7 +291,7 @@ export default class Home extends Component {
                               <span class="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
 
                               <div class="media_social">
-                                <span><Link to="#"><i class="fa fa-share-alt"></i>424</Link> Shares</span>
+                                <span><Link to="#"><i class="fa fa-eye"></i>424</Link> Views</span>
                                 <span><Link to="#"><i class="fa fa-comments-o"></i>4</Link> Comments</span>
                               </div>
                             </div>
@@ -306,7 +308,7 @@ export default class Home extends Component {
                               <span class="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
 
                               <div class="media_social">
-                                <span><Link to="#"><i class="fa fa-share-alt"></i>424</Link> Shares</span>
+                                <span><Link to="#"><i class="fa fa-eye"></i>424</Link> Views</span>
                                 <span><Link to="#"><i class="fa fa-comments-o"></i>4</Link> Comments</span>
                               </div>
                             </div>
@@ -345,7 +347,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="article_social">
-                            <span><i class="fa fa-share-alt"></i><Link to="#">424</Link>Shares</span>
+                            <span><i class="fa fa-eye"></i><Link to="#">424</Link>Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link>Comments</span>
                           </div>
                           {/* <!-- article_social --> */}
@@ -399,7 +401,7 @@ export default class Home extends Component {
                         {/* <!-- category_article_content --> */}
 
                         <div class="media_social">
-                          <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                          <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                           <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                         </div>
                         {/* <!-- media_social --> */}
@@ -443,7 +445,7 @@ export default class Home extends Component {
                         {/* <!-- category_article_content --> */}
 
                         <div class="media_social">
-                          <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                          <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                           <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                         </div>
                         {/* <!-- media_social --> */}
@@ -485,8 +487,8 @@ export default class Home extends Component {
                         <div class="media_social">
                           <span>
                             <Link to="#">
-                              <i class="fa fa-share-alt"></i>424
-                            </Link> Shares
+                              <i class="fa fa-eye"></i>424
+                            </Link> Views
                           </span>
                           <span>
                             <Link to="#">
@@ -544,7 +546,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="media_social">
-                            <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                            <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                           </div>
                           {/* <!-- media_social --> */}
@@ -582,7 +584,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="media_social">
-                            <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                            <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                           </div>
                           {/* <!-- media_social --> */}
@@ -628,7 +630,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="media_social">
-                            <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                            <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                           </div>
                           {/* <!-- media_social --> */}
@@ -663,7 +665,7 @@ export default class Home extends Component {
                           {/* <!-- category_article_content --> */}
 
                           <div class="media_social">
-                            <span><Link to="#"><i class="fa fa-share-alt"></i>424 </Link> Shares</span>
+                            <span><Link to="#"><i class="fa fa-eye"></i>424 </Link> Views</span>
                             <span><i class="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
                           </div>
                           {/* <!-- media_social --> */}
