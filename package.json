@@ -20,8 +20,8 @@
   },
   "scripts": {
     "server": "cd ./src/API && nodemon Server.js",
-    "client": "react-scripts start",
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "SET PORT=5002 && react-scripts start",
+    "start": "concurrently \"npm run client\" \"npm run server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

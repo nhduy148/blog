@@ -21,7 +21,7 @@ class App extends Component {
       <Provider store={store}>
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route path='*' component={Page404} />
+          <Route exact path='*' component={Page404} />
         </Switch>
       </Provider>
     );
