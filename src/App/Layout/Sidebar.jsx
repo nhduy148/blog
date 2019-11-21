@@ -3,331 +3,128 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 export class Sidebar extends Component {
+
+  state = {
+    latest: [],
+    comments: [],
+    tags: [],
+  }
+
+  componentDidMount() {
+    fetch("http://localhost:5003/posts?orderBy=date&order=DESC&limit=3")
+      .then(res => res.json())
+      .then( latest => this.setState({ latest }) )
+
+    fetch("http://localhost:5003/posts?orderBy=comment_count&order=DESC&limit=3")
+      .then(res => res.json())
+      .then( comments => this.setState({ comments }) )
+
+    fetch("http://localhost:5003/tags")
+      .then(res => res.json())
+      .then( tags => this.setState({ tags }) )
+  }
+
+
   render() {
+
+    let { latest, comments, tags } = this.state;
+
     return (
-      <div className="col-md-4">
-      <div className="widget">
-        <div className="widget_title widget_black">
-          <h2><Link to="#">Popular News</Link></h2>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right1.jpg" alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Canon launches photo centric 00214 Model supper shutter
-                camera</Link>
-            </h3> <span className="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
-
-            <div className="widget_article_social">
-              <span>
-                <Link to="single.html" target="_self"> <i className="fa fa-eye"></i>424</Link> Views
-              </span>
-              <span>
-                <Link to="single.html" target="_self"><i className="fa fa-comments-o"></i>4</Link> Comments
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right2.jpg" alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Samsung galaxy note are the supper mobile of all
-                products.</Link>
-            </h3>
-            <span className="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
-
-            <div className="widget_article_social">
-              <span>
-                <Link to="single.html" target="_self"> <i className="fa fa-eye"></i>424</Link> Views
-              </span>
-              <span>
-                <Link to="single.html" target="_self"><i className="fa fa-comments-o"></i>4</Link> Comments
-              </span>
-            </div>
+      <div className="sidebar" id="sidebar">
+        <div className="sidebar-widget">
+          <h3 className="c-title">Latest posts</h3>
+          <div className="sidebar-post-list">
+            {
+              latest.length > 0
+                ? latest.map(post =>
+                  <div className="sidebar-post-item" key={post.post_id}>
+                    <div className="left">
+                      <div className="image" style={{ backgroundImage: `url(${post.feature_image})` }}>
+                        <Link to="#" className="post-link post-link--v2">
+                          <span className="post-link-icon"><i className="fal fa-link"></i></span>
+                        </Link>
+                      </div>
+                      <span className="view">{post.view}</span>
+                    </div>
+                    <div className="right">
+                      <h3 className="title"><Link to="/">{post.title}</Link></h3>
+                      <div className="bottom">
+                        <p className="date">{new Date(post.date).toLocaleDateString('vi-VN')}</p>
+                        <div className="post-comment-count">
+                          <span className="icon"><i className="fal fa-comments"></i></span>
+                          <span>{post.comment_count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+                : <h3>Updating</h3>
+            }
           </div>
         </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right3.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Apple launches photo-centric wrist watch for Android</Link>
-            </h3>
-            <span className="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
-
-            <div className="widget_article_social">
-              <span>
-                <Link to="single.html" target="_self"> <i className="fa fa-eye"></i>424</Link> Views
-              </span>
-              <span>
-                <Link to="single.html" target="_self"><i className="fa fa-comments-o"></i>4</Link> Comments
-              </span>
-            </div>
+        <div className="sidebar-widget">
+          <div className="sidebar-social-list">
+            <div className="sidebar-social-item"><img src="assets/img/right_add1.jpg" alt=""/></div>
+            <div className="sidebar-social-item"><img src="assets/img/right_add2.jpg" alt=""/></div>
+            <div className="sidebar-social-item"><img src="assets/img/right_add3.jpg" alt=""/></div>
+            <div className="sidebar-social-item"><img src="assets/img/right_add4.jpg" alt=""/></div>
           </div>
         </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right4.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Kodak Hi-Speed shutter double shot camera comming soon</Link>
-            </h3>
-            <span className="media-date"><Link to="#">10Aug- 2015</Link>, by: <Link to="#">Eric joan</Link></span>
-
-            <div className="widget_article_social">
-              <span>
-                <Link to="single.html" target="_self"><i className="fa fa-eye"></i>424</Link> Views
-              </span>
-              <span>
-                <Link to="single.html" target="_self"><i className="fa fa-comments-o"></i>4</Link> Comments
-              </span>
-            </div>
+        <div className="sidebar-widget">
+          <div className="adv2"><img src="assets/img/adj.png" alt=""/></div>
+        </div>
+        <div className="sidebar-widget">
+          <h3 className="c-title">Most Commented</h3>
+          <div className="sidebar-post-list">
+            {
+              comments.length > 0
+                ? comments.map(post =>
+                  <div className="sidebar-post-item" key={post.post_id}>
+                    <div className="left">
+                      <div className="image" style={{ backgroundImage: `url(${post.feature_image})` }}>
+                        <Link to="#" className="post-link post-link--v2">
+                          <span className="post-link-icon"><i className="fal fa-link"></i></span>
+                        </Link>
+                      </div>
+                      <span className="view">{post.view}</span>
+                    </div>
+                    <div className="right">
+                      <h3 className="title"><Link to="/">{post.title}</Link></h3>
+                      <div className="bottom">
+                        <p className="date">{new Date(post.date).toLocaleDateString('vi-VN')}</p>
+                        <div className="post-comment-count">
+                          <span className="icon"><i className="fal fa-comments"></i></span>
+                          <span>{post.comment_count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+                : <h3>Updating</h3>
+            }
           </div>
         </div>
-        <p className="widget_divider"><Link to="#" target="_self">More News&nbsp;&raquo;</Link></p>
-      </div>
-      {/* <!-- Popular News --> */}
-
-      <div className="widget hidden-xs m30">
-        <img className="img-responsive adv_img" src="assets/img/right_add1.jpg" alt="add_one" />
-        <img className="img-responsive adv_img" src="assets/img/right_add2.jpg" alt="add_one" />
-        <img className="img-responsive adv_img" src="assets/img/right_add3.jpg" alt="add_one" />
-        <img className="img-responsive adv_img" src="assets/img/right_add4.jpg" alt="add_one" />
-      </div>
-      {/* <!-- Advertisement --> */}
-
-      <div className="widget hidden-xs m30">
-        <img className="img-responsive widget_img" src="assets/img/right_add5.jpg" alt="add_one" />
-      </div>
-      {/* <!-- Advertisement --> */}
-
-      <div className="widget reviews m30">
-        <div className="widget_title widget_black">
-          <h2><Link to="#">Reviews</Link></h2>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right1.jpg"
-                alt="Generic placeholder" /></Link>
+        <div className="sidebar-widget">
+          <h3 className="c-title">Popular tags</h3>
+          <div className="sidebar-tag-list">
+            {
+              tags.length > 0
+              ? tags.map( tag => <Link to={`/tag/${tag.slug}`} className="sidebar-tag-item" key={tag.hashtag_id}>{tag.name}</Link> )
+              : ''
+            }
           </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">DSLR is the most old camera at this time readmore about new
-                products</Link>
-            </h3>
-            <span className="rating">
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star-half-full"></i>
-            </span>
-          </div>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right2.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading"><Link to="single.html" target="_self">Samsung is the best
-                mobile in the android market.</Link></h3> <span className="rating">
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star-half-full"></i>
-            </span>
-          </div>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right3.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Apple launches photo-centric wrist watch for Android</Link>
-            </h3>
-            <span className="rating">
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star-half-full"></i>
-            </span>
-          </div>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right4.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Yasaki camera launches new generic hi-speed shutter camera.</Link>
-            </h3>
-            <span className="rating">
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star"></i>
-              <i className="fa fa-star-half-full"></i>
-            </span>
-          </div>
-        </div>
-        <p className="widget_divider"><Link to="#" target="_self">More News&nbsp;&raquo;</Link></p>
-      </div>
-      {/* <!-- Reviews News --> */}
-
-      <div className="widget hidden-xs m30">
-        <img className="img-responsive widget_img" src="assets/img/right_add6.jpg" alt="add_one" />
-      </div>
-      {/* <!-- Advertisement --> */}
-
-      <div className="widget m30">
-        <div className="widget_title widget_black">
-          <h2><Link to="#">Most Commented</Link></h2>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right1.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Yasaki camera launches new generic hi-speed shutter
-                camera.</Link>
-            </h3>
-
-            <div className="media_social">
-              <span><i className="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
-            </div>
-          </div>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right2.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Samsung is the best mobile in the android market.</Link>
-            </h3>
-
-            <div className="media_social">
-              <span><i className="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
-            </div>
-          </div>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right3.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">Apple launches photo-centric wrist watch for Android</Link>
-            </h3>
-
-            <div className="media_social">
-              <span><i className="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
-            </div>
-          </div>
-        </div>
-        <div className="media">
-          <div className="media-left">
-            <Link to="#"><img className="media-object" src="assets/img/pop_right4.jpg"
-                alt="Generic placeholder" /></Link>
-          </div>
-          <div className="media-body">
-            <h3 className="media-heading">
-              <Link to="single.html" target="_self">DSLR is the most old camera at this time readmore about new
-                products</Link>
-            </h3>
-
-            <div className="media_social">
-              <span><i className="fa fa-comments-o"></i><Link to="#">4</Link> Comments</span>
-            </div>
-          </div>
-        </div>
-        <p className="widget_divider"><Link to="#" target="_self">More News&nbsp;&nbsp;&raquo; </Link></p>
-      </div>
-      {/* <!-- Most Commented News --> */}
-
-      <div className="widget m30">
-        <div className="widget_title widget_black">
-          <h2><Link to="#">Editor Corner</Link></h2>
-        </div>
-        <div className="widget_body"><img className="img-responsive left" src="assets/img/editor.jpg" alt="Generic placeholder" />
-
-          <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically
-            procrastinate B2C
-            users after installed base benefits. Dramatically visualize customer directed convergence without
-          </p>
-
-          <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically
-            procrastinate B2C
-            users after installed base benefits. Dramatically visualize customer directed convergence without
-            revolutionary ROI.</p>
-          <button className="btn pink">Read more</button>
         </div>
       </div>
-      {/* <!-- Editor News --> */}
-
-      <div className="widget hidden-xs m30">
-        <img className="img-responsive add_img" src="assets/img/right_add7.jpg" alt="add_one" />
-        <img className="img-responsive add_img" src="assets/img/right_add7.jpg" alt="add_one" />
-        <img className="img-responsive add_img" src="assets/img/right_add7.jpg" alt="add_one" />
-        <img className="img-responsive add_img" src="assets/img/right_add7.jpg" alt="add_one" />
-      </div>
-      {/* <!--Advertisement --> */}
-
-      <div className="widget m30">
-        <div className="widget_title widget_black">
-          <h2><Link to="#">Readers Corner</Link></h2>
-        </div>
-        <div className="widget_body"><img className="img-responsive left" src="assets/img/reader.jpg"
-            alt="Generic placeholder" />
-
-          <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically
-            procrastinate B2C
-            users after installed base benefits. Dramatically visualize customer directed convergence without
-          </p>
-
-          <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically
-            procrastinate B2C
-            users after installed base benefits. Dramatically visualize customer directed convergence without
-            revolutionary ROI.</p>
-          <button className="btn pink">Read more</button>
-        </div>
-      </div>
-      {/* <!--  Readers Corner News --> */}
-
-      <div className="widget hidden-xs m30">
-        <img className="img-responsive widget_img" src="assets/img/podcast.jpg" alt="add_one" />
-      </div>
-      {/* <!--Advertisement--> */}
-    </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  
+
 })
 
 const mapDispatchToProps = {
-  
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)

@@ -6,5 +6,7 @@ module.exports = app => {
 
   app.get('/categories', blogCtrl.getCategories)
 
+  app.get('/tags', blogCtrl.getHashtags)
+
   app.get('/posts', blogCtrl.getPosts)
 }
