@@ -267,8 +267,10 @@ body {
     justify-content: center;
     align-items: center;
     opacity: 0;
+
     &:hover {
       opacity: 1;
+
       .post-link-icon {
         opacity: 1;
         transform: translateY(0);
@@ -309,8 +311,10 @@ body {
       border-radius: 10px;
       // border-radius: 50%;
       overflow: hidden;
+
       .post-link-icon {
         background: transparent;
+
         i {
           color: #FFF;
         }
@@ -397,6 +401,7 @@ body {
       margin-right: 10px;
       position: relative;
     }
+
     .image {
       width: 90px;
       background-size: cover;
@@ -406,10 +411,12 @@ body {
       overflow: hidden;
       height: 70px;
     }
+
     .title {
       font-size: 13px;
       margin-bottom: 10px;
     }
+
     .view {
       position: absolute;
       top: -10px;
@@ -425,12 +432,14 @@ body {
       font-weight: bold;
       color: #FFF;
     }
+
     .bottom {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
     }
+
     .icon {
       margin-right: 5px;
     }
@@ -442,6 +451,7 @@ body {
       justify-content: center;
       flex-wrap: wrap;
     }
+
     &-item {
       width: 50%;
       padding: 0 3px;
@@ -449,23 +459,20 @@ body {
     }
   }
 
-  &-tag{
+  &-tag {
 
     &-item {
       display: inline-block;
-      padding: 8px 20px;
+      padding: 8px 12px;
       color: #8d8d8d;
       background-color: #f0f0f0;
       border-radius: 5px;
       text-transform: uppercase;
-      margin-right: 10px;
-      margin-bottom: 12px;
+      margin: 5px;
       font-size: 13px;
       font-weight: bold;
     }
   }
 }
 
-#trending {
-
-}
+#trending {}
