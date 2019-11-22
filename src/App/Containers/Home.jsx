@@ -10,6 +10,7 @@ export default class Home extends Component {
   render() {
     return (
       <>
+        {/* https://jevelin.shufflehound.com/personal-blog/ */}
         <Header />
         <Main componentInside={[<Trending />]} haveSidebar={true} />
         {/* <Footer /> */}

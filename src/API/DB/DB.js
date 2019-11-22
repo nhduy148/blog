@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({path: __dirname+'../.env'});
 const DB_URL = process.env.DB_URL || "mongodb://localhost2"
 const DB_PORT = process.env.DB_PORT || 27017
 const DB_NAME = process.env.DB_NAME

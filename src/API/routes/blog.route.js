@@ -9,4 +9,8 @@ module.exports = app => {
   app.get('/tags', blogCtrl.getHashtags)
 
   app.get('/posts', blogCtrl.getPosts)
+
+  app.get('/post/:post', blogCtrl.getPostDetials)
+
+  app.get('/comment/:post', blogCtrl.getCommentByPostID)
 }

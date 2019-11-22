@@ -16,6 +16,10 @@ export default class Trending extends Component {
 
   render() {
 
+    const config = require('../../app.settings.json');
+    
+    let postLink = post => config.slug === "slug" ? `/post/${post.slug}` : `/post/${post.post_id}`
+
     let { posts } = this.state;
 
     return (
@@ -26,14 +30,14 @@ export default class Trending extends Component {
           {
             posts.length > 0
             ? posts.map(post =>
-              <div className="post-item post-item-horizontal" key={post.post_id}>
+              <div className="post-item post-horizontal" key={post.post_id}>
                 <div className="post-image" style={{backgroundImage: `url(${post.feature_image})`}}>
-                  <Link to="#" className="post-link">
+                  <Link to={postLink(post)} className="post-link">
                     <span className="post-link-icon"><i className="fal fa-link"></i></span>
                   </Link>
                 </div>
                 <div className="post-content">
-                  <h5 className="post-title"><Link to="#">{post.title}</Link></h5>
+                  <h5 className="post-title"><Link to={postLink(post)}>{post.title}</Link></h5>
                   <div className="post-info">
                     <p className="post-author">by <span className="post-author-name">{post.author}</span></p>
                     <p className="post-date">{ new Date(post.date).toLocaleString() }</p>

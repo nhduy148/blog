@@ -9,6 +9,7 @@ import reducer from './Reducers';
 
 import Home from './Containers/Home'
 import Page404 from './Containers/Page404'
+import Single from './Containers/Single';
 
 export const store = createStore(
   reducer,
@@ -21,6 +22,7 @@ class App extends Component {
       <Provider store={store}>
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route exact path='/post/:slug' component={Single} />
           <Route exact path='*' component={Page404} />
         </Switch>
       </Provider>

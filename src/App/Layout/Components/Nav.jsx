@@ -7,7 +7,7 @@ export default class Nav extends Component {
       <nav className="navbar">
         <div className="container">
           <ul className="navbar-nav">
-            <li className="active"><Link to="index.html">Home</Link></li>
+            <li className="active"><Link to="/">Home</Link></li>
             <li><Link to="category.html">Mobile</Link></li>
             <li><Link to="blog.html">Tablet</Link></li>
             <li><Link to="blog.html">Gadgets</Link></li>
