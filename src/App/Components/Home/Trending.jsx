@@ -18,7 +18,16 @@ export default class Trending extends Component {
 
     const config = require('../../app.settings.json');
     
-    let postLink = post => config.slug === "slug" ? `/post/${post.slug}` : `/post/${post.post_id}`
+    const postLink = post => config.slug === "slug" ? `/post/${post.slug}` : `/post/${post.post_id}`
+
+    const postDate = time => {
+      let dayNow = new Date(time);
+      let date = dayNow.getDate();
+      let month = dayNow.toLocaleString('en-US', { month: 'long' });
+      let year = dayNow.getFullYear();
+
+      return `${date} ${month}, ${year}`
+    }
 
     let { posts } = this.state;
 
@@ -40,7 +49,7 @@ export default class Trending extends Component {
                   <h5 className="post-title"><Link to={postLink(post)}>{post.title}</Link></h5>
                   <div className="post-info">
                     <p className="post-author">by <span className="post-author-name">{post.author}</span></p>
-                    <p className="post-date">{ new Date(post.date).toLocaleString() }</p>
+                    <p className="post-date">{ postDate(post.date) }</p>
                   </div>
                   <p className="post-excerpt">{post.except}...</p>
                   <div className="post-additional">

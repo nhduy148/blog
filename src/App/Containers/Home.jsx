@@ -12,7 +12,7 @@ export default class Home extends Component {
       <>
         {/* https://jevelin.shufflehound.com/personal-blog/ */}
         <Header />
-        <Main componentInside={[<Trending />]} haveSidebar={true} />
+        <Main componentInside={[<Trending key="Trending" />]} haveSidebar={true} />
         {/* <Footer /> */}
       </>
     )

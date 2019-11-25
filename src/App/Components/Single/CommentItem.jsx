@@ -19,8 +19,8 @@ const CommentItem = ({comment}) => {
       </div>
       {
         !!comment.reply && comment.reply.length > 0
-        ? comment.reply.map( reply =>
-            <div className="comment-item comment-item-reply">
+        ? comment.reply.map( (reply, i) =>
+            <div className="comment-item comment-item-reply" key={i}>
               <div className="comment-avatar">
                 <img src={reply.avatar} alt=""/>
               </div>

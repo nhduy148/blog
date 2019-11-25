@@ -43,6 +43,9 @@ module.exports = {
   },
 
   getCategories: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
     let isAdmin = true;
 
     DB.open()
@@ -66,6 +69,9 @@ module.exports = {
   },
 
   getHashtags: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+
     DB.open()
       .then(db => db.collection("hashtags"))
       .then(hashtags => {
@@ -82,6 +88,8 @@ module.exports = {
   },
 
   getPosts: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
 
     let orderBy = `${req.query.orderBy}` || "date";
     let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
@@ -135,8 +143,8 @@ module.exports = {
   },
 
   getPostDetials: (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
 
     let post = 
     isNaN( parseInt(req.params.post) )
@@ -189,8 +197,8 @@ module.exports = {
   },
 
   getCommentByPostID: (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
 
     let post = 
     isNaN( parseInt(req.params.post) )
@@ -227,10 +235,11 @@ module.exports = {
         },
       ])
       .toArray((err, data) => {
-        if (err) res.json({ err: "No posts yet!" });
-        else if( data[0].comments.length <= 0 ) res.json({err: "No comments yet!"})
+        
+        if (err) res.json({ err: "Somthing went wrong!" });
+        else if( !!data[0] ) res.json(data[0].comments);
         // else res.json(data[0]);
-        else res.json(data[0].comments);
+        else res.json({err: "No comments yet!"});
 
         DB.close();
       })

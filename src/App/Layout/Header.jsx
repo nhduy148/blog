@@ -2,15 +2,38 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Nav from './Components/Nav';
 
-export default class Header extends Component {
+import { connect } from 'react-redux';
+import { fetchCategoryList } from '../Actions'
+
+import loadingImage from '../Assets/image/common/loading-page.gif'
+
+export class Header extends Component {
+
+  componentDidMount() {
+    this.props.fetchCategoryList();
+  }
+
   render() {
+
+    let { categoryList, getCategoryListStatus } = this.props;
+
+    let dayNow = new Date();    
+    let day = dayNow.toLocaleString('en-US', { weekday: 'long' });
+    let date = dayNow.getDate();
+    let month = dayNow.toLocaleString('en-US', { month: 'long' });
+    let year = dayNow.getFullYear();
+
     return (
+      <>
+      <div className={`loading${getCategoryListStatus ? ' is-completed' : ''}`}>
+        <img src={loadingImage} alt=""/>
+      </div>
       <header id="header" className="header">
         <div className="container">
           <div className="header-section">
             <div className="header-left">
               {/* <!-- Date --> */}{/* <!-- Time --> */}
-              <span className="date">Sunday</span><span className="time"> . 09 August . 2016</span>
+              <span className="date">{day}</span><span className="time"> . {date} {month} . {year}</span>
               <div className="social">
                 <Link to="#" className="icons-sm fb-ic"><i className="fab fa-facebook"></i></Link>
                 {/* <!--Twitter--> */}
@@ -25,7 +48,7 @@ export default class Header extends Component {
               {/* <!-- Top Social Section --> */}
             </div>
             <div className="logo">
-              <Link to="index.html"><img src="assets/img/logo.png" alt="Tech NewsLogo" /></Link>
+              <Link to="/"><img src="/assets/img/logo.png" alt="Tech NewsLogo" /></Link>
             </div>
             <div className="header-right">
               <ul className="header-auth">
@@ -51,10 +74,26 @@ export default class Header extends Component {
         {/* <!-- .container --> */}
 
         <div className="navbar-section">
-          <Nav />
+          <Nav categoryList={categoryList} />
         </div>
         {/* <!-- .navigation-section --> */}
       </header>
+      </>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  categoryList: state.categoryList,
+  getCategoryListStatus: state.getCategoryListStatus
+})
+
+const mapDispatchToProps = dispatchEvent => {  
+  return {
+    fetchCategoryList: () => {
+      dispatchEvent( fetchCategoryList() );
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

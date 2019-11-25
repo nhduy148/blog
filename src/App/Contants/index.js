@@ -1,1 +1,5 @@
-export const REDUCER = 'REDUCER';
+export const PRE_LOADING = 'PRE_LOADING';
+export const GET_CATEGORY_LIST = 'GET_CATEGORY_LIST';
+export const GET_TAG_LIST = 'GET_TAG_LIST';
+export const GET_LATEST_POSTS = 'GET_LATEST_POSTS';
+export const GET_MOST_COMMENT_POSTS = 'GET_MOST_COMMENT_POSTS';

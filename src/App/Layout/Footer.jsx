@@ -17,7 +17,7 @@ export default class Footer extends Component {
                 </div>
                 <div className="logo footer-logo">
                   <Link to="#" title="fontanero" href="index.html">
-                    <img src="assets/img/tech_about.jpg" alt="technews" />
+                    <img src="/assets/img/tech_about.jpg" alt="technews" />
                   </Link>
                   <p>
                     Competently conceptualize go forward testing procedures and B2B expertise.
@@ -72,7 +72,7 @@ export default class Footer extends Component {
                 <div className="media">
                   <div className="media-left">
                     <Link to="#">
-                      <img className="media-object" src="assets/img/editor_pic1.jpg" alt="Generic placeholder" />
+                      <img className="media-object" src="/assets/img/editor_pic1.jpg" alt="Generic placeholder" />
                     </Link>
                   </div>
                   <div className="media-body">
@@ -92,7 +92,7 @@ export default class Footer extends Component {
                 <div className="media">
                   <div className="media-left">
                     <Link to="#">
-                      <img className="media-object" src="assets/img/editor_pic2.jpg" alt="Generic placeholder" />
+                      <img className="media-object" src="/assets/img/editor_pic2.jpg" alt="Generic placeholder" />
                     </Link>
                   </div>
                   <div className="media-body">
@@ -111,7 +111,7 @@ export default class Footer extends Component {
                 <div className="media">
                   <div className="media-left">
                     <Link to="#">
-                      <img className="media-object" src="assets/img/editor_pic3.jpg" alt="Generic placeholder" />
+                      <img className="media-object" src="/assets/img/editor_pic3.jpg" alt="Generic placeholder" />
                     </Link>
                   </div>
                   <div className="media-body">
@@ -134,18 +134,18 @@ export default class Footer extends Component {
                   <h3><Link to="category.html" target="_self">Tech Photos</Link></h3>
                 </div>
                 <div className="widget_photos">
-                  <img className="img-thumbnail" src="assets/img/tech_photo1.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo2.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo3.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo4.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo5.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo6.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo7.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo8.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo9.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo10.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo11.jpg" alt="Tech Photos" />
-                  <img className="img-thumbnail" src="assets/img/tech_photo12.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo1.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo2.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo3.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo4.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo5.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo6.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo7.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo8.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo9.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo10.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo11.jpg" alt="Tech Photos" />
+                  <img className="img-thumbnail" src="/assets/img/tech_photo12.jpg" alt="Tech Photos" />
                 </div>
 
               </div>
