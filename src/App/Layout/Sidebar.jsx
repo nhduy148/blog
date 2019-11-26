@@ -25,9 +25,7 @@ class Sidebar extends Component {
   render() {
 
     let { tagList, latestPosts, mostCommentPosts } = this.props;
-
-    console.log( this.props );
-
+    
     return (
       <div className="sidebar" id="sidebar">
         <div className="sidebar-widget">

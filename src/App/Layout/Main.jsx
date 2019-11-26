@@ -4,21 +4,27 @@ import Sidebar from './Sidebar'
 const Main = ({ componentInside, componentOutside, haveSidebar }) => {
   return (
     <main>
-      <div className="l-container">
-        {
-          haveSidebar
-          ? <>
+      {
+        haveSidebar
+        ? 
+          <>
+            <div className="l-container">
               <div className="l-content">
                 {componentInside}
               </div>
               <div className="l-sidebar">
                 <Sidebar />
               </div>
+            </div>
+            <div className="l-outside">
               {componentOutside}
-            </>
-          : componentOutside
-        }
-      </div>
+            </div>
+          </>
+        : 
+          <div className="l-outside">
+            {componentOutside}
+          </div>
+      }
     </main>
   )
 }

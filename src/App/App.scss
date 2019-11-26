@@ -17,6 +17,7 @@ body {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   padding-top: 70px;
 }
 
@@ -26,6 +27,10 @@ body {
 
 .l-sidebar {
   width: 300px;
+}
+
+.l-outside {
+  width: 100%;
 }
 
 .c-title {
@@ -387,6 +392,70 @@ body {
   }
 
   &-vertical {}
+
+  &-video {
+
+    background: #000;
+    &-list {
+      margin: 0 auto;
+      max-width: 1200px;
+      padding: 80px 0;
+    }
+
+    .slick-slide {
+      width: 300px;
+      padding: 0 10px;
+    }
+    // display: flex;
+    // flex-wrap: wrap;
+    &-item {
+      width: 100%;
+      height: 160px;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &-thumb {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,.1);
+      }
+    }
+
+    &-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &-icon {
+      color: #F00;
+      font-size: 48px;
+      position: relative;
+      z-index: 100;
+
+      &::after {
+        content: '';
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+        background: #FFF;
+      }
+    }
+  }
 }
 
 .sidebar {
@@ -531,6 +600,7 @@ body {
       text-transform: uppercase;
     }
   }
+
   .content {
     font-size: 14px;
     padding: 0 5px;
@@ -1733,11 +1803,16 @@ body {
     justify-content: center;
     align-items: center;
     font-style: italic;
+
     img {
-      margin-bottom: 5px;
+      margin: 5px auto;
     }
   }
 
+  .imgwrap {
+    text-align: center;
+    margin-top: 10px;
+  }
 }
 
 .loading {

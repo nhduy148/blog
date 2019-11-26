@@ -10,6 +10,8 @@ module.exports = app => {
 
   app.get('/posts', blogCtrl.getPosts)
 
+  app.get('/videos', blogCtrl.getVideos)
+
   app.get('/post/:post', blogCtrl.getPostDetials)
 
   app.get('/comment/:post', blogCtrl.getCommentByPostID)
