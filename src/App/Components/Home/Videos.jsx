@@ -6,12 +6,16 @@ export default function Videos({ homeVideos, getHomeVideosStatus }) {
   let settings = {
     dots: true,
     arrows: true,
-    slidesToShow: 4,
-    slidesToScroll: 2,
+    slidesToShow: 3,
+    slidesToScroll: 1,
     infinite: true,
+    autoplay: true,
+    autoplaySpeed: 30000,
+    speed: 1200,
   }
   return (
     <section className="post-video" id="post-video">
+      <h3 class="c-title c-title--center">Videos</h3>
       <Slider className="post-video-list" {...settings}>
         {
           getHomeVideosStatus
@@ -23,7 +27,7 @@ export default function Videos({ homeVideos, getHomeVideosStatus }) {
               // style={{backgroundImage: `url(${video.snippet.thumbnails.medium.url})`}}
             >
               <div className="post-video-thumb">
-                <img src={video.snippet.thumbnails.medium.url} alt=""/>
+                <img src={video.snippet.thumbnails.high.url} alt=""/>
                 <a 
                   target="_blank" 
                   rel="noopener noreferrer" 
@@ -33,7 +37,12 @@ export default function Videos({ homeVideos, getHomeVideosStatus }) {
                   <i className="post-video-icon fab fa-youtube"></i>
                 </a>
               </div>
-              <h3 className="post-video-title">{video.title}</h3>
+              <h3 className="post-video-title">
+                <a target="_blank" rel="noopener noreferrer" 
+                  href={"https://www.youtube.com/watch?v="+video.id.videoId} >
+                  {video.snippet.title}
+                </a>
+              </h3>
             </div>
           )
           : ''

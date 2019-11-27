@@ -3,7 +3,7 @@ import Sidebar from './Sidebar'
 
 const Main = ({ componentInside, componentOutside, haveSidebar }) => {
   return (
-    <main>
+    <main id="main">
       {
         haveSidebar
         ? 
