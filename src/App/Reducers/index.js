@@ -12,7 +12,7 @@ import {
   GET_TAG_LIST,
   GET_LATEST_POSTS,
   GET_MOST_COMMENT_POSTS,
-  GET_TRENDING_POSTS,
+  GET_MOST_VIEW_POSTS,
   GET_POST_DETAILS,
   GET_COMMENT_BY_POST,
   GET_HOME_VIDEOS,
@@ -37,19 +37,29 @@ const blog = (state = defaultState, action) => {
       return { ...state, tagList: action.tagList, getTagListStatus: action.getTagListStatus }
 
     case GET_LATEST_POSTS:
-      return { ...state, latestPosts: action.latestPosts, getLatestPostsStatus: action.getLatestPostsStatus }
+      return { 
+        ...state, 
+        latestPosts: action.latestPosts, 
+        fetchingLatestPosts: action.fetchingLatestPosts, 
+        getLatestPostsStatus: action.getLatestPostsStatus 
+      }
     
     case GET_MOST_COMMENT_POSTS:
       return { ...state, mostCommentPosts: action.mostCommentPosts, getMostCommentPostsStatus: action.getMostCommentPostsStatus }
 
-    case GET_TRENDING_POSTS:
-      return { ...state, trendingPosts: action.trendingPosts, getTrendingPostsStatus: action.getTrendingPostsStatus }
+    case GET_MOST_VIEW_POSTS:
+      return { ...state, mostViewPosts: action.mostViewPosts, getMostViewPostsStatus: action.getMostViewPostsStatus }
 
     case GET_HOME_VIDEOS:
       return { ...state, homeVideos: action.homeVideos, getHomeVideosStatus: action.getHomeVideosStatus }
       
     case GET_POST_DETAILS:
-      return { ...state, postDetails: action.postDetails, getPostDetailsStatus: action.getPostDetailsStatus }
+      return { 
+        ...state, 
+        postDetails: action.postDetails, 
+        fetchingPostDetails: action.fetchingPostDetails, 
+        getPostDetailsStatus: action.getPostDetailsStatus 
+      }
 
     case GET_COMMENT_BY_POST:
       return { ...state, commentByPost: action.commentByPost, getCommentByPostStatus: action.getCommentByPostStatus }

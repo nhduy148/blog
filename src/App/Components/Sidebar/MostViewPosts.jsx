@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function LatestPosts ({latestPosts}) {
+function MostViewPosts ({mostViewPosts}) {
   return (
     <>
-      <h3 className="c-title">Latest posts</h3>
+      <h3 className="c-title">Most Viewed</h3>
       <div className="sidebar-post-list">
         {
-          !!latestPosts && latestPosts.length > 0
-            ? latestPosts.map(post =>
+          !!mostViewPosts && mostViewPosts.length > 0
+            ? mostViewPosts.map(post =>
               <div className="sidebar-post-item" key={post.post_id}>
                 <div className="left">
                   <div className="image" style={{ backgroundImage: `url(${post.feature_image})` }}>
@@ -37,4 +37,4 @@ function LatestPosts ({latestPosts}) {
   )
 }
 
-export default LatestPosts
+export default MostViewPosts;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Nav from './Components/Nav';
+import Navigation from '../Components/Header/Navigation';
 
 import logoWhite from '../Assets/image/common/logo_white.png';
 import logoBlack from '../Assets/image/common/logo_black.png';
@@ -19,7 +19,7 @@ export class Header extends Component {
   componentDidMount() {
     this.props.fetchCategoryList();
     let header = document.getElementById('header');
-    let main = document.getElementById('main');
+    // let main = document.getElementById('main');
     let headerHeight = header.clientHeight;
 
     window.addEventListener("scroll", () => {
@@ -27,11 +27,9 @@ export class Header extends Component {
       let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
       if( top > headerHeight ) {
         this.setState({ fixHeader: true });
-        main.style.marginTop = headerHeight+'px';
       }
       else {
         this.setState({ fixHeader: false });
-        main.style.marginTop = '0px';
       }
     })
   }
@@ -103,7 +101,7 @@ export class Header extends Component {
             <div className="logo">
               <Link to="/"><img src={logoBlack} alt="Tech NewsLogo" /></Link>
             </div>
-            <Nav categoryList={categoryList} />
+            <Navigation categoryList={categoryList} />
           </div>
           {/* <!-- .navigation-section --> */}
         </header>

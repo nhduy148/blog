@@ -3,24 +3,24 @@ import Header from '../Layout/Header'
 // import Footer from '../Layout/Footer'
 
 // import { Link } from 'react-router-dom';
-import Trending from '../Components/Home/Trending';
+import LatestPosts from '../Components/Home/LatestPosts';
 import Main from '../Layout/Main';
 
 import { connect } from 'react-redux';
-import { fetchTrendingPosts, fetchHomeVideos } from '../Actions';
+import { fetchLatestPosts, fetchHomeVideos } from '../Actions';
 import Videos from '../Components/Home/Videos';
 
 class Home extends Component {
 
 
   componentDidMount() {
-    this.props.fetchTrendingPosts();
+    this.props.fetchLatestPosts();
     this.props.fetchHomeVideos();
   }
 
   render() {
 
-    let { trendingPosts, getTrendingPostsStatus, homeVideos, getHomeVideosStatus } = this.props;
+    let { latestPosts, fetchingLatestPosts, getLatestPostsStatus, homeVideos, getHomeVideosStatus } = this.props;
 
     return (
       <>
@@ -28,7 +28,12 @@ class Home extends Component {
         <Header />
         <Main 
           componentInside = {
-            <Trending key="Trending" trendingPosts={trendingPosts} getTrendingPostsStatus={getTrendingPostsStatus} />
+            <LatestPosts 
+              key="LatestPosts" 
+              latestPosts={latestPosts} 
+              fetchingLatestPosts={fetchingLatestPosts}
+              getLatestPostsStatus={getLatestPostsStatus} 
+            />
           }
           haveSidebar={true}
           componentOutside = {<Videos homeVideos={homeVideos} getHomeVideosStatus={getHomeVideosStatus} />}
@@ -40,16 +45,17 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  trendingPosts: state.trendingPosts,
-  getTrendingPostsStatus: state.getTrendingPostsStatus,
+  latestPosts: state.latestPosts,
+  fetchingLatestPosts: state.fetchingLatestPosts,
+  getLatestPostsStatus: state.getLatestPostsStatus,
   homeVideos: state.homeVideos,
   getHomeVideosStatus: state.getHomeVideosStatus
 })
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTrendingPosts: () => {
-      dispatch( fetchTrendingPosts() );
+    fetchLatestPosts: () => {
+      dispatch( fetchLatestPosts() );
     },
     fetchHomeVideos: () => {
       dispatch( fetchHomeVideos() );

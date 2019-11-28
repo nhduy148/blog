@@ -14,9 +14,7 @@ class Single extends Component {
   componentDidMount() {
     let post_slug = this.props.match.params.slug;    
     this.props.fetchPostDetails(post_slug);    
-    this.props.fetchCommentByPost(post_slug);
-
-    console.log("componentDidMount");
+    // this.props.fetchCommentByPost(post_slug);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -25,13 +23,11 @@ class Single extends Component {
     if( nextSlug !== prevSlug ) {
       this.props.fetchPostDetails(nextSlug);    
       this.props.fetchCommentByPost(nextSlug);
-      
-      console.log("UNSAFE_componentWillReceiveProps");
     }
   }
 
   render() {
-    let { postDetails, getPostDetailsStatus, commentByPost, getCommentByPostStatus } = this.props;
+    let { postDetails, fetchingPostDetails, getPostDetailsStatus, commentByPost, getCommentByPostStatus } = this.props;
     
     return (
       <>
@@ -39,7 +35,7 @@ class Single extends Component {
         <Main
           componentInside= {
             <section className="single" id="single">
-              <PostDetails postDetails={postDetails} getPostDetailsStatus={getPostDetailsStatus} />              
+              <PostDetails postDetails={postDetails} fetchingPostDetails={fetchingPostDetails} getPostDetailsStatus={getPostDetailsStatus} />              
               <Comments commentByPost={commentByPost} getCommentByPostStatus={getCommentByPostStatus} />
             </section>
           }
@@ -52,6 +48,7 @@ class Single extends Component {
 
 const mapStateToProps = (state) => ({
   postDetails: state.postDetails,
+  fetchingPostDetails: state.fetchingPostDetails,
   getPostDetailsStatus: state.getPostDetailsStatus,
 
   commentByPost: state.commentByPost,

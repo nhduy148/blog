@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import LatestPosts from '../Components/Sidebar/LatestPosts';
+import MostViewPosts from '../Components/Sidebar/MostViewPosts';
 import MostCommentPosts from '../Components/Sidebar/MostCommentPosts';
 import Socials from '../Components/Sidebar/Socials';
 import Adv from '../Components/Sidebar/Adv';
 import PopularTags from '../Components/Sidebar/PopularTags';
 
 import { connect } from 'react-redux';
-import { fetchTagList, fetchLatestPosts, fetchMostCommentPosts } from '../Actions';
+import { fetchTagList, fetchMostViewPosts, fetchMostCommentPosts } from '../Actions';
 
 class Sidebar extends Component {
 
@@ -16,29 +16,29 @@ class Sidebar extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchTagList();
-    this.props.fetchLatestPosts();
+    this.props.fetchMostViewPosts();
     this.props.fetchMostCommentPosts();
+    this.props.fetchTagList();
   }
 
 
   render() {
 
-    let { tagList, latestPosts, mostCommentPosts } = this.props;
+    let { tagList, mostViewPosts, mostCommentPosts } = this.props;
     
     return (
       <div className="sidebar" id="sidebar">
         <div className="sidebar-widget">
-          <LatestPosts latestPosts={latestPosts} />
-        </div>
-        <div className="sidebar-widget">
-          <Socials />
+          <MostViewPosts mostViewPosts={mostViewPosts} />
         </div>
         <div className="sidebar-widget">
           <Adv />
         </div>
         <div className="sidebar-widget">
           <MostCommentPosts mostCommentPosts={mostCommentPosts} />
+        </div>
+        <div className="sidebar-widget">
+          <Socials />
         </div>
         <div className="sidebar-widget">
           <PopularTags tagList={tagList} />
@@ -50,7 +50,7 @@ class Sidebar extends Component {
 
 const mapStateToProps = (state) => ({
   tagList: state.tagList,
-  latestPosts: state.latestPosts,
+  mostViewPosts: state.mostViewPosts,
   mostCommentPosts: state.mostCommentPosts,
 
   getLatestPostsStatus: state.getLatestPostsStatus,
@@ -63,8 +63,8 @@ const mapDispatchToProps = dispatchEvent => {
     fetchTagList: () => {
       dispatchEvent( fetchTagList() );
     },
-    fetchLatestPosts: () => {
-      dispatchEvent( fetchLatestPosts() )
+    fetchMostViewPosts: () => {
+      dispatchEvent( fetchMostViewPosts() )
     },
     fetchMostCommentPosts: () => {
       dispatchEvent( fetchMostCommentPosts() )
