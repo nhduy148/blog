@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../Components/Header/Navigation';
 
-import logoWhite from '../Assets/image/common/logo_white.png';
+// import logoWhite from '../Assets/image/common/logo_white.png';
 import logoBlack from '../Assets/image/common/logo_black.png';
 
 import { connect } from 'react-redux';

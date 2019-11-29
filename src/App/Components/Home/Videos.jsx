@@ -16,7 +16,7 @@ export default function Videos({ homeVideos, getHomeVideosStatus }) {
   return (
     <section className="video" id="video">
       <h3 className="c-title c-title--center">Videos</h3>
-      <div className="container-large">
+      <div className="container-fluid">
         <Slider className="video-list" {...settings}>
           {
             getHomeVideosStatus

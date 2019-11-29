@@ -5,10 +5,10 @@ export default function PopularTags({tagList}) {
   return (
     <>
       <h3 className="c-title">Popular tags</h3>
-      <div className="sidebar-tag-list">
+      <div className="tag-list">
         {
           !!tagList && tagList.length > 0
-            ? tagList.map( tag => <Link to={`/tag/${tag.slug}`} className="sidebar-tag-item" key={tag.hashtag_id}>{tag.name}</Link> )
+            ? tagList.map( tag => <Link to={`/tag/${tag.slug}`} className="tag-item" key={tag.hashtag_id}>{tag.name}</Link> )
             : ''
         }
       </div>

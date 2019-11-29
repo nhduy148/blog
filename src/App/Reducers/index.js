@@ -10,12 +10,14 @@ import {
   PRE_LOADING,
   GET_CATEGORY_LIST,
   GET_TAG_LIST,
-  GET_LATEST_POSTS,
+  GET_FEATURED_POSTS,
   GET_MOST_COMMENT_POSTS,
   GET_MOST_VIEW_POSTS,
   GET_POST_DETAILS,
   GET_COMMENT_BY_POST,
-  GET_HOME_VIDEOS,
+  HOME_GET_VIDEOS,
+  HOME_GET_ARCHIVE_POSTS,
+  FOOTER_GET_RECENT_POSTS,
   
 } from '../Contants';
 
@@ -36,12 +38,12 @@ const blog = (state = defaultState, action) => {
     case GET_TAG_LIST:
       return { ...state, tagList: action.tagList, getTagListStatus: action.getTagListStatus }
 
-    case GET_LATEST_POSTS:
+    case GET_FEATURED_POSTS:
       return { 
         ...state, 
-        latestPosts: action.latestPosts, 
-        fetchingLatestPosts: action.fetchingLatestPosts, 
-        getLatestPostsStatus: action.getLatestPostsStatus 
+        featuredPosts: action.featuredPosts, 
+        fetchingFeaturedPosts: action.fetchingFeaturedPosts, 
+        getFeaturedPostsStatus: action.getFeaturedPostsStatus 
       }
     
     case GET_MOST_COMMENT_POSTS:
@@ -49,10 +51,7 @@ const blog = (state = defaultState, action) => {
 
     case GET_MOST_VIEW_POSTS:
       return { ...state, mostViewPosts: action.mostViewPosts, getMostViewPostsStatus: action.getMostViewPostsStatus }
-
-    case GET_HOME_VIDEOS:
-      return { ...state, homeVideos: action.homeVideos, getHomeVideosStatus: action.getHomeVideosStatus }
-      
+  
     case GET_POST_DETAILS:
       return { 
         ...state, 
@@ -62,9 +61,33 @@ const blog = (state = defaultState, action) => {
       }
 
     case GET_COMMENT_BY_POST:
-      return { ...state, commentByPost: action.commentByPost, getCommentByPostStatus: action.getCommentByPostStatus }
+      return { 
+        ...state, 
+        commentByPost: action.commentByPost, 
+        getCommentByPostStatus: action.getCommentByPostStatus 
+      }
 
-
+    case HOME_GET_VIDEOS:
+        return { 
+          ...state, 
+          homeVideos: action.homeVideos, 
+          getHomeVideosStatus: action.getHomeVideosStatus 
+        }
+        
+    case HOME_GET_ARCHIVE_POSTS:
+      return {
+        ...state,
+        homeArchivePosts: action.homeArchivePosts,
+        fetchingHomeArchivePosts: action.fetchingHomeArchivePosts,
+        getHomeArchivePostsStatus: action.getHomeArchivePostsStatus
+      }
+    
+    case FOOTER_GET_RECENT_POSTS:
+      return {
+        ...state,
+        footerRecentPosts: action.footerRecentPosts,
+        getFooterRecentPostsStatus: action.getFooterRecentPostsStatus,
+      }
       
     default:
       return state;

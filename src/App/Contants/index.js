@@ -1,10 +1,15 @@
 export const PRE_LOADING = 'PRE_LOADING';
 export const GET_CATEGORY_LIST = 'GET_CATEGORY_LIST';
 export const GET_TAG_LIST = 'GET_TAG_LIST';
-export const GET_LATEST_POSTS = 'GET_LATEST_POSTS';
+export const GET_FEATURED_POSTS = 'GET_FEATURED_POSTS';
 export const GET_MOST_COMMENT_POSTS = 'GET_MOST_COMMENT_POSTS';
 export const GET_MOST_VIEW_POSTS = 'GET_MOST_VIEW_POSTS';
 export const GET_POST_DETAILS = 'GET_POST_DETAILS';
 export const GET_COMMENT_BY_POST = 'GET_COMMENT_BY_POST';
-export const GET_HOME_VIDEOS = 'GET_HOME_VIDEOS';
+export const HOME_GET_VIDEOS = 'HOME_GET_VIDEOS';
+export const HOME_GET_ARCHIVE_POSTS = 'HOME_GET_ARCHIVE_POSTS';
+export const FOOTER_GET_RECENT_POSTS = 'FOOTER_GET_RECENT_POSTS';
+// export const XXX = 'XXX';
+// export const XXX = 'XXX';
+// export const XXX = 'XXX';
 // export const XXX = 'XXX';

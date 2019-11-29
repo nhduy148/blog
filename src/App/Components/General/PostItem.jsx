@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function PostItem({post}) {
+export default function PostItem({post, post_layout}) {
 
   const config = require('../../app.settings.json');
     
@@ -17,7 +17,7 @@ export default function PostItem({post}) {
   }
 
   return (
-    <div className="post-item post-horizontal">
+    <div className={`post-item`}>
       <div className="post-image" style={{backgroundImage: `url(${post.feature_image})`}}>
         <Link to={postLink(post)} className="post-link">
           <span className="post-link-icon"><i className="fal fa-link"></i></span>

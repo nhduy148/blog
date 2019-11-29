@@ -1,61 +1,85 @@
 import React, { Component } from 'react'
 import Header from '../Layout/Header'
-// import Footer from '../Layout/Footer'
+import Footer from '../Layout/Footer'
 
 // import { Link } from 'react-router-dom';
-import LatestPosts from '../Components/Home/LatestPosts';
+import FeaturedPosts from '../Components/Home/FeaturedPosts';
 import Main from '../Layout/Main';
 
 import { connect } from 'react-redux';
-import { fetchLatestPosts, fetchHomeVideos } from '../Actions';
+import { fetchFeaturedPosts, fetchHomeVideos, fetchHomeArchivePosts } from '../Actions';
 import Videos from '../Components/Home/Videos';
+import ArchivePosts from '../Components/Home/ArchivePosts';
+import Banner from '../Components/Home/Banner';
 
 class Home extends Component {
 
 
   componentDidMount() {
-    this.props.fetchLatestPosts();
+    this.props.fetchFeaturedPosts();
     this.props.fetchHomeVideos();
+    this.props.fetchHomeArchivePosts();
   }
 
   render() {
 
-    let { latestPosts, fetchingLatestPosts, getLatestPostsStatus, homeVideos, getHomeVideosStatus } = this.props;
+    let { 
+      featuredPosts, fetchingFeaturedPosts, getFeaturedPostsStatus, 
+      homeVideos, getHomeVideosStatus, 
+      homeArchivePosts, fetchingHomeArchivePosts, getHomeArchivePostsStatus
+    } = this.props;
 
     return (
       <>
         {/* https://jevelin.shufflehound.com/personal-blog/ */}
         <Header />
+        <Banner />
         <Main 
           componentInside = {
-            <LatestPosts 
-              key="LatestPosts" 
-              latestPosts={latestPosts} 
-              fetchingLatestPosts={fetchingLatestPosts}
-              getLatestPostsStatus={getLatestPostsStatus} 
+            <FeaturedPosts 
+              key="FeaturedPosts" 
+              featuredPosts={featuredPosts} 
+              fetchingFeaturedPosts={fetchingFeaturedPosts}
+              getFeaturedPostsStatus={getFeaturedPostsStatus} 
             />
           }
           haveSidebar={true}
-          componentOutside = {<Videos homeVideos={homeVideos} getHomeVideosStatus={getHomeVideosStatus} />}
+          componentOutside = {[
+            <Videos key="Videos" homeVideos={homeVideos} getHomeVideosStatus={getHomeVideosStatus} />,
+            <ArchivePosts 
+              key="ArchivePosts" 
+              homeArchivePosts={homeArchivePosts} 
+              fetchingHomeArchivePosts={fetchingHomeArchivePosts}
+              getHomeArchivePostsStatus={getHomeArchivePostsStatus} 
+            />
+          ]}
         />
-        {/* <Footer /> */}
+        <Footer />
       </>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  latestPosts: state.latestPosts,
-  fetchingLatestPosts: state.fetchingLatestPosts,
-  getLatestPostsStatus: state.getLatestPostsStatus,
+  featuredPosts: state.featuredPosts,
+  fetchingFeaturedPosts: state.fetchingFeaturedPosts,
+  getFeaturedPostsStatus: state.getFeaturedPostsStatus,
+  
   homeVideos: state.homeVideos,
-  getHomeVideosStatus: state.getHomeVideosStatus
+  getHomeVideosStatus: state.getHomeVideosStatus,
+
+  homeArchivePosts: state.homeArchivePosts,
+  fetchingHomeArchivePosts: state.fetchingHomeArchivePosts,
+  getHomeArchivePostsStatus: state.getHomeArchivePostsStatus
 })
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchLatestPosts: () => {
-      dispatch( fetchLatestPosts() );
+    fetchFeaturedPosts: () => {
+      dispatch( fetchFeaturedPosts() );
+    },
+    fetchHomeArchivePosts: () => {
+      dispatch( fetchHomeArchivePosts() );
     },
     fetchHomeVideos: () => {
       dispatch( fetchHomeVideos() );

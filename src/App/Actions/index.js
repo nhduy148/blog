@@ -2,14 +2,17 @@ import {
   PRE_LOADING,
   GET_CATEGORY_LIST,
   GET_TAG_LIST,
-  GET_LATEST_POSTS,
+  GET_FEATURED_POSTS,
   GET_MOST_COMMENT_POSTS,
   GET_MOST_VIEW_POSTS,
   GET_POST_DETAILS,
   GET_COMMENT_BY_POST,
-  GET_HOME_VIDEOS,
+  HOME_GET_VIDEOS,
+  HOME_GET_ARCHIVE_POSTS,
+  FOOTER_GET_RECENT_POSTS,
 
-} from '../Contants';
+}
+from '../Contants';
 
 import Axios from 'axios';
 
@@ -30,11 +33,24 @@ export const getTagList = (tagList, getTagListStatus) => ({
   getTagListStatus
 })
 
-export const getLatestPosts = (latestPosts, fetchingLatestPosts, getLatestPostsStatus) => ({
-  type: GET_LATEST_POSTS,
-  latestPosts,
-  fetchingLatestPosts,
-  getLatestPostsStatus
+export const getFeaturedPosts = (featuredPosts, fetchingFeaturedPosts, getFeaturedPostsStatus) => ({
+  type: GET_FEATURED_POSTS,
+  featuredPosts,
+  fetchingFeaturedPosts,
+  getFeaturedPostsStatus
+})
+
+export const getHomeVideos = (homeVideos, getHomeVideosStatus) => ({
+  type: HOME_GET_VIDEOS,
+  homeVideos,
+  getHomeVideosStatus
+})
+
+export const getHomeArchivePosts = (homeArchivePosts, fetchingHomeArchivePosts, getHomeArchivePostsStatus) => ({
+  type: HOME_GET_ARCHIVE_POSTS,
+  homeArchivePosts,
+  fetchingHomeArchivePosts,
+  getHomeArchivePostsStatus
 })
 
 export const getMostCommentPosts = (mostCommentPosts, getMostCommentPostsStatus) => ({
@@ -47,12 +63,6 @@ export const getMostViewPosts = (mostViewPosts, getMostViewPostsStatus) => ({
   type: GET_MOST_VIEW_POSTS,
   mostViewPosts,
   getMostViewPostsStatus
-})
-
-export const getHomeVideos = (homeVideos, getHomeVideosStatus) => ({
-  type: GET_HOME_VIDEOS,
-  homeVideos,
-  getHomeVideosStatus
 })
 
 export const getPostDetails = (postDetails, fetchingPostDetails, getPostDetailsStatus) => ({
@@ -68,6 +78,14 @@ export const getCommentByPost = (commentByPost, getCommentByPostStatus) => ({
   getCommentByPostStatus
 })
 
+export const getFooterRecentPosts = (footerRecentPosts, getFooterRecentPostsStatus) => ({
+  type: FOOTER_GET_RECENT_POSTS,
+  footerRecentPosts,
+  getFooterRecentPostsStatus
+})
+
+// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*//
+
 export function fetchCategoryList() {
   return dispatch => {
     return Axios.get("http://localhost:5003/categories")
@@ -82,16 +100,6 @@ export function fetchTagList() {
     return Axios.get("http://localhost:5003/tags")
       .then(data => dispatch(getTagList(data.data, true)))
       .catch(err => dispatch(getTagList(null, false)))
-  }
-}
-
-export function fetchLatestPosts() {
-  return dispatch => {
-    dispatch(getLatestPosts(null, true, false))
-
-    return Axios.get("http://localhost:5003/posts?orderBy=date&order=DESC")
-      .then(data => dispatch(getLatestPosts(data.data, false, true)))
-      .catch(err => dispatch(getLatestPosts(null, false, false)))
   }
 }
 
@@ -138,10 +146,40 @@ export function fetchCommentByPost(post_slug) {
   }
 }
 
+export function fetchFeaturedPosts() {
+  return dispatch => {
+    dispatch(getFeaturedPosts(null, true, false))
+
+    return Axios.get("http://localhost:5003/posts?orderBy=date&order=DESC&limit=10")
+      .then(data => dispatch(getFeaturedPosts(data.data, false, true)))
+      .catch(err => dispatch(getFeaturedPosts(null, false, false)))
+  }
+}
+
 export function fetchHomeVideos() {
   return dispatch => {
     return Axios.get("http://localhost:5003/videos/")
       .then(data => dispatch(getHomeVideos(data.data.items, true)))
       .catch(err => dispatch(getHomeVideos(null, false)))
+  }
+}
+
+export function fetchHomeArchivePosts() {
+  return dispatch => {
+    dispatch(getHomeArchivePosts(null, true, false))
+
+    return Axios.get("http://localhost:5003/posts?orderBy=date&order=DESC&limit=12")
+      .then(data => dispatch(getHomeArchivePosts(data.data, false, true)))
+      .catch(err => dispatch(getHomeArchivePosts(null, false, false)))
+  }
+}
+
+export function fetchFooterRecentPosts() {
+  return dispatch => {
+    dispatch(getFooterRecentPosts(null, false))
+
+    return Axios.get("http://localhost:5003/posts?orderBy=date&order=DESC&limit=3")
+      .then(data => dispatch(getFooterRecentPosts(data.data, true)))
+      .catch(err => dispatch(getFooterRecentPosts(null, false)))
   }
 }
