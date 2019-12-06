@@ -18,6 +18,7 @@ import {
   HOME_GET_VIDEOS,
   HOME_GET_ARCHIVE_POSTS,
   FOOTER_GET_RECENT_POSTS,
+  GET_POSTS_BY_CATEGORY,
   
 } from '../Contants';
 
@@ -30,13 +31,24 @@ const blog = (state = defaultState, action) => {
 
   switch (action.type) {
     case PRE_LOADING:
-      return{ ...state, preLoading: action.preLoading }
+      return{ 
+        ...state, 
+        preLoading: action.preLoading 
+      }
 
     case GET_CATEGORY_LIST:
-      return { ...state, categoryList: action.categoryList, getCategoryListStatus: action.getCategoryListStatus }
+      return { 
+        ...state, 
+        categoryList: action.categoryList, 
+        getCategoryListStatus: action.getCategoryListStatus 
+      }
 
     case GET_TAG_LIST:
-      return { ...state, tagList: action.tagList, getTagListStatus: action.getTagListStatus }
+      return { 
+        ...state, 
+        tagList: action.tagList, 
+        getTagListStatus: action.getTagListStatus 
+      }
 
     case GET_FEATURED_POSTS:
       return { 
@@ -47,10 +59,18 @@ const blog = (state = defaultState, action) => {
       }
     
     case GET_MOST_COMMENT_POSTS:
-      return { ...state, mostCommentPosts: action.mostCommentPosts, getMostCommentPostsStatus: action.getMostCommentPostsStatus }
+      return { 
+        ...state, 
+        mostCommentPosts: action.mostCommentPosts, 
+        getMostCommentPostsStatus: action.getMostCommentPostsStatus 
+      }
 
     case GET_MOST_VIEW_POSTS:
-      return { ...state, mostViewPosts: action.mostViewPosts, getMostViewPostsStatus: action.getMostViewPostsStatus }
+      return { 
+        ...state, 
+        mostViewPosts: action.mostViewPosts, 
+        getMostViewPostsStatus: action.getMostViewPostsStatus 
+      }
   
     case GET_POST_DETAILS:
       return { 
@@ -87,6 +107,14 @@ const blog = (state = defaultState, action) => {
         ...state,
         footerRecentPosts: action.footerRecentPosts,
         getFooterRecentPostsStatus: action.getFooterRecentPostsStatus,
+      }
+
+    case GET_POSTS_BY_CATEGORY:
+      return {
+        ...state,
+        categoryPosts: action.categoryPosts,
+        fetchingPostsByCategory: action.fetchingPostsByCategory,
+        getPostsByCategoryStatus: action.getPostsByCategoryStatus
       }
       
     default:

@@ -15,4 +15,6 @@ module.exports = app => {
   app.get('/post/:post', blogCtrl.getPostDetials)
 
   app.get('/comment/:post', blogCtrl.getCommentByPostID)
+
+  app.get('/category/:category', blogCtrl.getPostsByCategory)
 }

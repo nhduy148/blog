@@ -1,9 +1,12 @@
 import React from 'react'
 import Sidebar from './Sidebar'
 
-const Main = ({ componentInside, componentOutside, haveSidebar }) => {
+const Main = ({ componentInside, componentOutsideTop, componentOutsideBottom, haveSidebar }) => {
   return (
     <main id="main">
+      <div className="l-outside">
+        {componentOutsideTop}
+      </div>
       {
         haveSidebar
         ? 
@@ -17,12 +20,12 @@ const Main = ({ componentInside, componentOutside, haveSidebar }) => {
               </div>
             </div>
             <div className="l-outside">
-              {componentOutside}
+              {componentOutsideBottom}
             </div>
           </>
         : 
           <div className="l-outside">
-            {componentOutside}
+            {componentOutsideBottom}
           </div>
       }
     </main>

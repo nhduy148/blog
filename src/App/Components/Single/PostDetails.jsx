@@ -32,18 +32,34 @@ const PostDetails = ({ postDetails, fetchingPostDetails, getPostDetailsStatus })
                 <p className="cat-list">
                   {
                     !!postDetails.category
-                      ? postDetails.category.map(cat => <Link key={cat.category_id} to={`category/${cat.slug}`} className="cat-item">{cat.name}</Link>)
+                      ? postDetails.category.map(cat => <Link key={cat.category_id} to={`/category/${cat.slug}`} className="cat-item">{cat.name}</Link>)
                       : ''
                   }
                 </p>
               </div>
               <div className="content" id="blog-content" dangerouslySetInnerHTML={{ __html: postDetails.content }} />
               <div className="tag-list">
+                <h5>Tags In: </h5>
                 {
                   !!postDetails.tags
-                    ? postDetails.tags.map(tag => <Link key={tag.hashtag_id} to={`category/${tag.slug}`} className="tag-item">{tag.name}</Link>)
+                    ? postDetails.tags.map(tag => <Link key={tag.hashtag_id} to={`/tag/${tag.slug}`} className="tag-item">{tag.name}</Link>)
                     : ''
                 }
+              </div>
+              <div className="sub-info">
+                <div className="sub-info-group">
+                  <span className="write-comment">write comment</span>
+                  <span className="share"><i className="fal fa-share-alt"></i></span>
+                </div>
+                <div className="total-comment">
+                  {
+                    postDetails.comment_count > 1 ? 
+                      `${postDetails.comment_count} comments`
+                    : postDetails.comment_count = 1 ?
+                      `${postDetails.comment_count} comment`
+                      : `No comment yet!`
+                  }
+                </div>
               </div>
             </>
           : <h1>Post not found!</h1>

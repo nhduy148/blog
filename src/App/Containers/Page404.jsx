@@ -7,7 +7,7 @@ export default class Page404 extends Component {
     return (
       <>
         <Header />
-        <Main componentOutside={<h3>404</h3>} />
+        <Main componentOutsideTop={<h3>404</h3>} />
       </>
     )
   }

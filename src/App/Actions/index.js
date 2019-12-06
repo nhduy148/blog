@@ -10,12 +10,14 @@ import {
   HOME_GET_VIDEOS,
   HOME_GET_ARCHIVE_POSTS,
   FOOTER_GET_RECENT_POSTS,
+  GET_POSTS_BY_CATEGORY,
 
 }
 from '../Contants';
 
 import Axios from 'axios';
 
+// ********************************************************************************************************************************** //
 export const loading = preLoading => ({
   type: PRE_LOADING,
   preLoading
@@ -84,7 +86,14 @@ export const getFooterRecentPosts = (footerRecentPosts, getFooterRecentPostsStat
   getFooterRecentPostsStatus
 })
 
-// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*//
+export const getPostsByCategory = (categoryPosts, fetchingPostsByCategory, getPostsByCategoryStatus) => ({
+  type: GET_POSTS_BY_CATEGORY,
+  categoryPosts,
+  fetchingPostsByCategory,
+  getPostsByCategoryStatus
+})
+
+// ********************************************************************************************************************************** //
 
 export function fetchCategoryList() {
   return dispatch => {
@@ -181,5 +190,15 @@ export function fetchFooterRecentPosts() {
     return Axios.get("http://localhost:5003/posts?orderBy=date&order=DESC&limit=3")
       .then(data => dispatch(getFooterRecentPosts(data.data, true)))
       .catch(err => dispatch(getFooterRecentPosts(null, false)))
+  }
+}
+
+export function fetchPostsByCategory(category) {
+  return dispatch => {
+    dispatch(getPostsByCategory(null, true, false))
+
+    return Axios.get("http://localhost:5003/category/"+category)
+      .then(data => dispatch(getPostsByCategory(data.data, false, true)))
+      .catch(err => dispatch(getPostsByCategory(null, false, false)))
   }
 }

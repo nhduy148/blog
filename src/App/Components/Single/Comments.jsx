@@ -2,10 +2,13 @@ import React from 'react'
 import CommentItem from './CommentItem'
 // import Loading from '../General/Loading'
 
-export const Comments = ({ commentByPost, getCommentByPostStatus }) => {
+
+const Comments = ({ commentByPost, getCommentByPostStatus }) => {
+  
   return getCommentByPostStatus
     ?
     <div className="comment">
+      <h3 className="comment-title">Comments</h3>
       <div className="comment-list">
         {
           commentByPost.length > 0
@@ -37,3 +40,4 @@ export const Comments = ({ commentByPost, getCommentByPostStatus }) => {
     : ''
   // : <Loading />
 }
+export default Comments;

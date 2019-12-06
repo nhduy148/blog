@@ -6,7 +6,9 @@ import Header from '../Layout/Header';
 import Main from '../Layout/Main';
 
 import PostDetails from '../Components/Single/PostDetails';
-import { Comments } from '../Components/Single/Comments';
+import Comments from '../Components/Single/Comments';
+import Footer from '../Layout/Footer';
+import Banner from '../Components/General/Banner';
 
 
 class Single extends Component {
@@ -28,19 +30,26 @@ class Single extends Component {
 
   render() {
     let { postDetails, fetchingPostDetails, getPostDetailsStatus, commentByPost, getCommentByPostStatus } = this.props;
-    
+    let banner_title = !!postDetails ? postDetails.title : null;
+
     return (
       <>
         <Header />
+        <Banner title={banner_title} />
         <Main
           componentInside= {
             <section className="single" id="single">
-              <PostDetails postDetails={postDetails} fetchingPostDetails={fetchingPostDetails} getPostDetailsStatus={getPostDetailsStatus} />              
+              <PostDetails 
+                postDetails={postDetails} 
+                fetchingPostDetails={fetchingPostDetails} 
+                getPostDetailsStatus={getPostDetailsStatus} 
+              />              
               <Comments commentByPost={commentByPost} getCommentByPostStatus={getCommentByPostStatus} />
             </section>
           }
           haveSidebar= {true}
         />
+        <Footer />
       </>
     )
   }

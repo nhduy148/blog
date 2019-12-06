@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { fetchFeaturedPosts, fetchHomeVideos, fetchHomeArchivePosts } from '../Actions';
 import Videos from '../Components/Home/Videos';
 import ArchivePosts from '../Components/Home/ArchivePosts';
-import Banner from '../Components/Home/Banner';
+import MainVisual from '../Components/Home/MainVisual';
 
 class Home extends Component {
 
@@ -32,9 +32,10 @@ class Home extends Component {
     return (
       <>
         {/* https://jevelin.shufflehound.com/personal-blog/ */}
-        <Header />
-        <Banner />
+        <Header isFixed={false} />
         <Main 
+          componentOutsideTop = {<MainVisual />}
+          haveSidebar={true}
           componentInside = {
             <FeaturedPosts 
               key="FeaturedPosts" 
@@ -43,8 +44,7 @@ class Home extends Component {
               getFeaturedPostsStatus={getFeaturedPostsStatus} 
             />
           }
-          haveSidebar={true}
-          componentOutside = {[
+          componentOutsideBottom = {[
             <Videos key="Videos" homeVideos={homeVideos} getHomeVideosStatus={getHomeVideosStatus} />,
             <ArchivePosts 
               key="ArchivePosts" 

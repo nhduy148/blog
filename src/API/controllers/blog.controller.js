@@ -32,7 +32,7 @@ let postQuery = [
     $lookup: {
       from: 'hashtags',
       localField: 'tags',
-      foreignField: 'slug',
+      foreignField: 'hashtag_id',
       as: 'tags',
     }
   }
@@ -93,6 +93,8 @@ module.exports = {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
+    let match = req.query.match ? `${req.query.match}` : {};
+    
     let orderBy = req.query.orderBy ? `${req.query.orderBy}` : "date";
     let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
     let limit = req.query.limit ? parseInt(req.query.limit) : 10;
@@ -104,8 +106,8 @@ module.exports = {
       .then(posts => {
         posts.aggregate([
           ...postQuery,
-          { $match: { status: "publish", post_type: post_type } },
           { $unwind: "$author" },
+          { $match: { status: "publish", post_type: post_type, ...match } },
           {
             $project: {
               _id: false,
@@ -246,7 +248,7 @@ module.exports = {
             as: 'comments'
           }
         },
-        { $match: { post_id: post } },
+        { $match: { post_id: post, approved: true } },
         {
           $project: {
             _id: false,
@@ -266,13 +268,95 @@ module.exports = {
       .toArray((err, data) => {
         
         if (err) res.json({ err: "Somthing went wrong!" });
-        else if( !!data[0] ) res.json(data[0].comments);
-        // else res.json(data[0]);
+        else if( !!data[0] ) {
+          let comments = data[0].comments;
+
+          comments.map(
+            comment => comment.reply = comment.reply.filter( reply => reply.approved === true )
+          )
+          res.json(comments)
+        }
         else res.json({err: "No comments yet!"});
 
         DB.close();
       })
     })
     .catch(err => res.json({ err: "Somthing went wrong!" }))
+  },
+
+  getPostsByCategory: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+    let match = req.query.match ? `${req.query.match}` : {};  
+
+    let categoryParam = req.params.category;
+  
+    let orderBy = req.query.orderBy ? `${req.query.orderBy}` : "date";
+    let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+
+    let finalResult = {};
+
+    DB.open()
+      .then(db => {
+        let posts = db.collection("posts")
+        let category = db.collection("categories");
+        category.findOne( 
+          {slug: categoryParam}, 
+          (err, data) => {
+            if (err || data===null) finalResult = { err: "No post in category yet!" };
+            else finalResult = { ...finalResult, ...data }
+          })
+
+        posts.aggregate([
+          ...postQuery,
+          { $unwind: "$author" },
+          { $match: { 
+            ...match, 
+            status: "publish", 
+            category: {
+              "$elemMatch": {
+                slug: categoryParam
+              }
+            }
+          } },
+          {
+            $project: {
+              _id: false,
+              post_id: 1,
+              title: 1,
+              except: 1,
+              slug: 1,
+              feature_image: 1,
+              date: 1,
+              view: 1,
+              category: 1,
+              tags: 1,
+              author: "$author.nicename",
+              comment_count: {
+                $size: {
+                  $reduce: {
+                    input: "$comments.reply",
+                    initialValue: "$comments",
+                    in: { $concatArrays: ["$$value", "$$this"] }
+                  }
+                }
+              }
+            }
+          },
+          { $sort: { [orderBy]: order } },
+          { $limit: limit },
+        ])
+          .toArray((err, data) => {
+            if (err || !data.length > 0) finalResult = { err: "No post in category yet!" };
+            else finalResult = { ...finalResult, posts: data };
+            
+
+            res.json(finalResult);
+            DB.close();
+          })
+      })
+      .catch(err => res.json({ err: "Somthing went wrong!" }))
   }
 }

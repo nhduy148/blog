@@ -10,33 +10,38 @@ import { fetchCategoryList } from '../Actions'
 
 import loadingImage from '../Assets/image/common/loading-page.gif'
 
-export class Header extends Component {
+class Header extends Component {
 
-  state = {
-    fixHeader: false
-  }
-
-  componentDidMount() {
+  componentDidMount() {    
     this.props.fetchCategoryList();
+    
     let header = document.getElementById('header');
-    // let main = document.getElementById('main');
     let headerHeight = header.clientHeight;
+    let doc = document.documentElement;  
+    let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
 
-    window.addEventListener("scroll", () => {
-      let doc = document.documentElement;
-      let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
-      if( top > headerHeight ) {
-        this.setState({ fixHeader: true });
-      }
-      else {
-        this.setState({ fixHeader: false });
-      }
-    })
+    let { isFixed } = this.props;
+    if( isFixed === false ) {
+      if( top > headerHeight ) header.classList.add("is-fixed");
+      else header.classList.remove("is-fixed");
+  
+      window.addEventListener("scroll", () => {
+        let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
+        if( top > headerHeight ) { 
+          header.classList.add("is-fixed"); 
+          header.classList.add("fake-headroom") }
+        else {
+          header.classList.remove("is-fixed");
+          header.classList.remove("fake-headroom");
+        }
+      })
+    }
+    else {
+      header.classList.add("is-fixed");
+    }
   }
 
   render() {
-    let { fixHeader } = this.state;
-
     let { categoryList, getCategoryListStatus } = this.props;
 
     let dayNow = new Date();
@@ -50,7 +55,7 @@ export class Header extends Component {
         <div className={`loading${getCategoryListStatus ? ' is-completed' : ''}`}>
           <img src={loadingImage} alt="" />
         </div>
-        <header id="header" className={`header${fixHeader ? ' is-fixed' : ''}`}>
+        <header id="header" className="header">
           <div className="header-section">
             <div className="container">
               <div className="header-section-box">

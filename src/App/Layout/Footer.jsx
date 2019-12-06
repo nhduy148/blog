@@ -7,10 +7,13 @@ import Logo from '../Assets/image/common/logo_white.png';
 import SmallPostItem from '../Components/General/SmallPostItem';
 import { fetchFooterRecentPosts } from '../Actions'
 
-export class Footer extends Component {
+class Footer extends Component {
 
   componentDidMount() {
     this.props.fetchFooterRecentPosts();
+  }
+
+  componentWillReceiveProps(next) {
   }
 
   render() {
@@ -49,7 +52,7 @@ export class Footer extends Component {
                   {
                     getTagListStatus
                       ? tagList.map(tag => <Link to={`/tag/${tag.slug}`} className="tag-item" key={tag.hashtag_id}>{tag.name}</Link>)
-                      : ''
+                      : <h3>Updating</h3>
                   }
                 </div>
               </div>
