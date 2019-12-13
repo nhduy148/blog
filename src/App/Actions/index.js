@@ -168,8 +168,11 @@ export function fetchFeaturedPosts() {
 export function fetchHomeVideos() {
   return dispatch => {
     return Axios.get("http://localhost:5003/videos/")
-      .then(data => dispatch(getHomeVideos(data.data.items, true)))
-      .catch(err => dispatch(getHomeVideos(null, false)))
+      .then(data => {
+        if(!!data.data.err) dispatch( getHomeVideos(null, false) );
+        else dispatch( getHomeVideos(data.data.items, true) );
+      })
+      .catch(err => dispatch( getHomeVideos(null, false) ) )
   }
 }
 

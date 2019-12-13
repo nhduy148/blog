@@ -12,18 +12,19 @@ import loadingImage from '../Assets/image/common/loading-page.gif'
 
 class Header extends Component {
 
-  componentDidMount() {    
+  componentDidMount() {
     this.props.fetchCategoryList();
     
     let header = document.getElementById('header');
     let headerHeight = header.clientHeight;
     let doc = document.documentElement;  
     let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
-
-    let { isFixed } = this.props;
-    if( isFixed === false ) {
+    
+    if( window.location.pathname === "/" ) {
       if( top > headerHeight ) header.classList.add("is-fixed");
       else header.classList.remove("is-fixed");
+
+      if( header.classList.contains("is-fixed") ) header.classList.remove("is-fixed");
   
       window.addEventListener("scroll", () => {
         let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
@@ -37,7 +38,7 @@ class Header extends Component {
       })
     }
     else {
-      header.classList.add("is-fixed");
+      if( !header.classList.contains("is-fixed") ) header.classList.add("is-fixed");
     }
   }
 
@@ -45,9 +46,9 @@ class Header extends Component {
     let { categoryList, getCategoryListStatus } = this.props;
 
     let dayNow = new Date();
-    let day = dayNow.toLocaleString('en-US', { weekday: 'long' });
+    let day = dayNow.toLocaleString('vi-VN', { weekday: 'long' });
     let date = dayNow.getDate();
-    let month = dayNow.toLocaleString('en-US', { month: 'long' });
+    let month = dayNow.toLocaleString('vi-VN', { month: 'long' });
     let year = dayNow.getFullYear();
 
     return (

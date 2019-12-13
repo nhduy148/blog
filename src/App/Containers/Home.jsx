@@ -31,8 +31,7 @@ class Home extends Component {
 
     return (
       <>
-        {/* https://jevelin.shufflehound.com/personal-blog/ */}
-        <Header isFixed={false} />
+        <Header />
         <Main 
           componentOutsideTop = {<MainVisual />}
           haveSidebar={true}

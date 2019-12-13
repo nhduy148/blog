@@ -25,9 +25,9 @@ class App extends Component {
         <ScrollToTop>
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route exact path='/category/:category' component={Category} />
+            <Route path='/category/:category' component={Category} />
             {/* <Route exact path='/tag/:tag' component={Home} /> */}
-            <Route exact path='/post/:slug' component={Single} />
+            <Route path='/post/:slug' component={Single} />
             <Route exact path='*' component={Page404} />
           </Switch>
         </ScrollToTop>

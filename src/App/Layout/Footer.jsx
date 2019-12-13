@@ -13,9 +13,6 @@ class Footer extends Component {
     this.props.fetchFooterRecentPosts();
   }
 
-  componentWillReceiveProps(next) {
-  }
-
   render() {
     let { tagList, getTagListStatus, footerRecentPosts, getFooterRecentPostsStatus } = this.props;
     

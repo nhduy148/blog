@@ -163,6 +163,7 @@ module.exports = {
       }
     })
     .then( data => res.json(data.data) )
+    .catch( err => res.json({err: "Somethings went wrong!"+err}))
     
   },
 
@@ -301,13 +302,13 @@ module.exports = {
     DB.open()
       .then(db => {
         let posts = db.collection("posts")
-        let category = db.collection("categories");
-        category.findOne( 
-          {slug: categoryParam}, 
-          (err, data) => {
-            if (err || data===null) finalResult = { err: "No post in category yet!" };
-            else finalResult = { ...finalResult, ...data }
-          })
+        // let category = db.collection("categories");
+        // category.findOne( 
+        //   {slug: categoryParam}, 
+        //   (err, data) => {
+        //     if (err || data===null) finalResult = { err: "No post in category yet!" };
+        //     else finalResult = { ...finalResult, ...data }
+        //   })
 
         posts.aggregate([
           ...postQuery,
@@ -350,7 +351,15 @@ module.exports = {
         ])
           .toArray((err, data) => {
             if (err || !data.length > 0) finalResult = { err: "No post in category yet!" };
-            else finalResult = { ...finalResult, posts: data };
+            else {
+              const cate_info = data.map( 
+                post => post.category.map( (cate, i2) => { 
+                  if( post.category[i2].slug === categoryParam ) return post.category[i2];
+                } ) 
+              )
+              
+              finalResult = { ...finalResult, ...cate_info[0][0], posts: data };
+            }
             
 
             res.json(finalResult);

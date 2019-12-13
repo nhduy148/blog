@@ -13,42 +13,43 @@ export default function Videos({ homeVideos, getHomeVideosStatus }) {
     autoplaySpeed: 3000,
     speed: 1200,
   }
+
   return (
     <section className="video" id="video">
       <h3 className="c-title c-title--center">Videos</h3>
       <div className="container-fluid">
-        <Slider className="video-list" {...settings}>
-          {
-            getHomeVideosStatus
-              ?
-              homeVideos.map(video =>
-                <div
-                  key={video.id.videoId}
-                  className="video-item"
-                // style={{backgroundImage: `url(${video.snippet.thumbnails.medium.url})`}}
-                >
-                  <div className="video-thumb">
-                    <img src={video.snippet.thumbnails.high.url} alt="" />
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={"https://www.youtube.com/watch?v=" + video.id.videoId}
-                      className="video-button"
-                    >
-                      <i className="video-icon fab fa-youtube"></i>
-                    </a>
+        {
+          getHomeVideosStatus
+            ? <Slider className="video-list" {...settings}>
+                {homeVideos.map(video =>
+                  <div
+                    key={video.id.videoId}
+                    className="video-item"
+                  // style={{backgroundImage: `url(${video.snippet.thumbnails.medium.url})`}}
+                  >
+                    <div className="video-thumb">
+                      <img src={video.snippet.thumbnails.high.url} alt="" />
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={"https://www.youtube.com/watch?v=" + video.id.videoId}
+                        className="video-button"
+                      >
+                        <i className="video-icon fab fa-youtube"></i>
+                      </a>
+                    </div>
+                    <h3 className="video-title">
+                      <a target="_blank" rel="noopener noreferrer"
+                        href={"https://www.youtube.com/watch?v=" + video.id.videoId} >
+                        {video.snippet.title}
+                      </a>
+                    </h3>
                   </div>
-                  <h3 className="video-title">
-                    <a target="_blank" rel="noopener noreferrer"
-                      href={"https://www.youtube.com/watch?v=" + video.id.videoId} >
-                      {video.snippet.title}
-                    </a>
-                  </h3>
-                </div>
-              )
-              : ''
-          }
-        </Slider>
+                )}
+              </Slider>
+
+            : <h3 className="error" style={{color: "white"}}>Something went wrong!</h3>
+        }
       </div>
     </section>
   )

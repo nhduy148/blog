@@ -24,8 +24,9 @@ class Category extends Component {
   render() {
     let post_layout = "vertical";
     let { categoryPosts, fetchingPostsByCategory, getPostsByCategoryStatus } = this.props;
-    console.log(categoryPosts);
     let banner_title = !!categoryPosts ? categoryPosts.name : null;
+
+    console.log( categoryPosts );
 
     return (
       <>
