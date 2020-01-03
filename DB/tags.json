@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5da6f02815e9b534ecfa9228"},"hashtag_id":{"$numberInt":"1"},"name":"General","slug":"general"}
+{"_id":{"$oid":"5da6f04815e9b534ecfa9229"},"hashtag_id":{"$numberInt":"2"},"name":"Technology","slug":"technology"}
+{"_id":{"$oid":"5dba5fbfa54b131e486193e7"},"hashtag_id":{"$numberInt":"3"},"name":"Guides","slug":"guides"}

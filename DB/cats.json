@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5dad57c183d6f23304642bb1"},"category_id":{"$numberInt":"2"},"name":"Technology","slug":"technology","default":false}
+{"_id":{"$oid":"5dba5fa5a54b131e486193e6"},"category_id":{"$numberInt":"3"},"name":"Guides","slug":"guides","default":false}

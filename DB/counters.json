@@ -1,0 +1,4 @@
+{"_id":{"$oid":"5dc2297f5be3216570d184d6"},"field":"post_id","value":{"$numberInt":"12"}}
+{"_id":{"$oid":"5dc2428a39067670dc28b183"},"field":"comment_id","value":{"$numberInt":"104"}}
+{"_id":{"$oid":"5dc90884d3a9693bd03eead9"},"field":"user_id","value":{"$numberInt":"2"}}
+{"_id":{"$oid":"5dc908afd3a9693bd03eeada"},"field":"category_id","value":{"$numberInt":"4"}}
