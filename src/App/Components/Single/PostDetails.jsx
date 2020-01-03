@@ -21,7 +21,7 @@ const PostDetails = ({ postDetails, fetchingPostDetails, getPostDetailsStatus })
         fetchingPostDetails
           ? <Loading />
           : getPostDetailsStatus
-          ? <>
+            ? <>
               < div className="thumb">
                 <img src={postDetails.feature_image} alt="" />
               </div>
@@ -38,31 +38,24 @@ const PostDetails = ({ postDetails, fetchingPostDetails, getPostDetailsStatus })
                 </p>
               </div>
               <div className="content" id="blog-content" dangerouslySetInnerHTML={{ __html: postDetails.content }} />
-              <div className="tag-list">
-                <h5>Tags In: </h5>
-                {
-                  !!postDetails.tags
-                    ? postDetails.tags.map(tag => <Link key={tag.hashtag_id} to={`/tag/${tag.slug}`} className="tag-item">{tag.name}</Link>)
-                    : ''
-                }
-              </div>
-              <div className="sub-info">
-                <div className="sub-info-group">
-                  <span className="write-comment">write comment</span>
-                  <span className="share"><i className="fal fa-share-alt"></i></span>
-                </div>
-                <div className="total-comment">
+              <div className="post-details-group">
+                <div className="post-details-group">
+                  <h5>Tags In: </h5>
                   {
-                    postDetails.comment_count > 1 ? 
-                      `${postDetails.comment_count} comments`
-                    : postDetails.comment_count = 1 ?
-                      `${postDetails.comment_count} comment`
-                      : `No comment yet!`
+                    !!postDetails.tags
+                      ? postDetails.tags.map(tag => <Link key={tag.hashtag_id} to={`/tag/${tag.slug}`} className="tag-item">{tag.name}</Link>)
+                      : ''
                   }
+                </div>
+                <div className="post-details-group">
+                  <h5>Share: </h5>
+                  <Link to="#" className="share-icon share-icon--facebook"><i className="fab fa-facebook-f"></i></Link>
+                  <Link to="#" className="share-icon share-icon--twitter"><i className="fab fa-twitter"></i></Link>
+                  <Link to="#" className="share-icon share-icon--instagram"><i className="fab fa-instagram"> </i></Link>
                 </div>
               </div>
             </>
-          : <h1>Post not found!</h1>
+            : <h1>Post not found!</h1>
       }
     </div >
   )

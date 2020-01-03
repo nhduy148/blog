@@ -26,8 +26,6 @@ class Category extends Component {
     let { categoryPosts, fetchingPostsByCategory, getPostsByCategoryStatus } = this.props;
     let banner_title = !!categoryPosts ? categoryPosts.name : null;
 
-    console.log( categoryPosts );
-
     return (
       <>
         <Header />

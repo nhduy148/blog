@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function PostItem({post, post_layout}) {
+export default function PostItem({ post, related }) {
 
   const config = require('../../app.settings.json');
-    
+
   const postLink = post => config.slug === "slug" ? `/post/${post.slug}` : `/post/${post.post_id}`
 
   const postDate = time => {
@@ -18,38 +18,64 @@ export default function PostItem({post, post_layout}) {
 
   return (
     <div className={`post-item`}>
-      <div className="post-image" style={{backgroundImage: `url(${post.feature_image})`}}>
+      <div className="post-image" style={{ backgroundImage: `url(${post.feature_image})` }}>
         <Link to={postLink(post)} className="post-link">
           <span className="post-link-icon"><i className="fal fa-link"></i></span>
         </Link>
       </div>
-      <div className="post-content">
-        <h5 className="post-title"><Link to={postLink(post)}>{post.title}</Link></h5>
-        <div className="post-info">
-          <p className="post-author">by <span className="post-author-name">{post.author}</span></p>
-          <p className="post-date">{ postDate(post.date) }</p>
-        </div>
-        <p className="post-excerpt">{post.except}...</p>
-        <div className="post-additional">
-          <div className="post-tag-list">
-            <span className="icon"><i className="fal fa-tag"></i></span>
-            {
-              !!post.tags && post.tags.length > 0
-                ? post.tags.map( (tag, i) => i === post.tags.length-1 ? <span className="post-tag" key={tag.hashtag_id}>{tag.name}</span> : <span className="post-tag" key={tag.hashtag_id}>{tag.name}, </span> )
-                : ''
-            }
-          </div>
+      {
+        related
+          ? <>
+            <h5 className="post-title"><Link to={postLink(post)}>{post.title}</Link></h5>
+              <div className="post-additional">
+                <div className="cate-list">
+                  <span className="icon"><i className="fal fa-list-alt"></i></span>
+                  {
+                    !!post.category && post.category.length > 0
+                      ? post.category.map((cate, i) => i === post.category.length - 1 ? <Link to={`/category/${cate.slug}`} className="post-tag" key={cate.category_id}>{cate.name}</Link> : <Link to={`/category/${cate.category_id}`}  className="post-tag" key={cate.category_id}>{cate.name}, </Link>)
+                      : ''
+                  }
+                </div>
 
-          <div className="post-comment-count">
-            <span className="icon"><i className="fal fa-comments"></i></span>
-            <span>{post.comment_count}</span>
+                <div className="comment-count">
+                  <span className="icon"><i className="fal fa-comments"></i></span>
+                  <span>{post.comment_count}</span>
+                </div>
+                <div className="view-count">
+                  <span className="icon"><i className="fal fa-eye"></i></span>
+                  <span>{post.view}</span>
+                </div>
+              </div>
+            </>
+          :
+          <div className="post-content">
+            <h5 className="post-title"><Link to={postLink(post)}>{post.title}</Link></h5>
+            <div className="post-info">
+              <p className="post-author">by <span className="post-author-name">{post.author}</span></p>
+              <p className="post-date">{postDate(post.date)}</p>
+            </div>
+            <p className="post-excerpt">{post.except}...</p>
+            <div className="post-additional">
+              <div className="post-tag-list">
+                <span className="icon"><i className="fal fa-tag"></i></span>
+                {
+                  !!post.tags && post.tags.length > 0
+                    ? post.tags.map((tag, i) => i === post.tags.length - 1 ? <span className="post-tag" key={tag.hashtag_id}>{tag.name}</span> : <span className="post-tag" key={tag.hashtag_id}>{tag.name}, </span>)
+                    : ''
+                }
+              </div>
+
+              <div className="post-comment-count">
+                <span className="icon"><i className="fal fa-comments"></i></span>
+                <span>{post.comment_count}</span>
+              </div>
+              <div className="post-view-count">
+                <span className="icon"><i className="fal fa-eye"></i></span>
+                <span>{post.view}</span>
+              </div>
+            </div>
           </div>
-          <div className="post-view-count">
-            <span className="icon"><i className="fal fa-eye"></i></span>
-            <span>{post.view}</span>
-          </div>
-        </div>
-      </div>
+      }
     </div>
   )
 }

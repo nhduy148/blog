@@ -1,43 +1,51 @@
 import React from 'react'
 import CommentItem from './CommentItem'
-// import Loading from '../General/Loading'
+import Loading from '../General/Loading';
+import CommentForm from './CommentForm';
+import no_cmt from '../../Assets/image/common/no-cmt.png';
 
+const Comments = ({ postID, commentByPost, fetchingCommentByPost, getCommentByPostStatus, commentHasAdded }) => {
 
-const Comments = ({ commentByPost, getCommentByPostStatus }) => {
-  
-  return getCommentByPostStatus
-    ?
-    <div className="comment">
-      <h3 className="comment-title">Comments</h3>
-      <div className="comment-list">
+  const totalComments = (total) => {
+    return total > 1 ?
+      `${total} comments`
+      : total = 1 ?
+        `${total} comment`
+        : `No comment yet!`
+  }
+
+  let commentList = !!commentByPost ? commentByPost.list : [];
+
+  commentList = !!commentHasAdded ? [commentHasAdded, ...commentList] : commentList;
+
+  return fetchingCommentByPost
+  ? <Loading />
+  : 
+      <div className="comment">
         {
-          commentByPost.length > 0
-            ? commentByPost.map(comment => <CommentItem key={comment.comment_id} comment={comment} />)
-            : <h3>No comment yet!</h3>
+          getCommentByPostStatus
+          ?
+            <div className="comment-list">
+              <h3 className="c-title2">
+                { totalComments(commentByPost.total) }
+              </h3>
+              { commentList.map(comment => <CommentItem key={comment.comment_id} comment={comment} />) }
+            </div>
+          : <div className="comment-empty">
+              <div className="comment-empty-icon">
+                <img src={no_cmt} alt=""/>
+              </div>
+              <h3>No comment yet!</h3>
+              <p>Be the first to comment</p>
+          </div>
         }
+        <CommentForm postID={postID} />
       </div>
-      <div className="comment-form">
-        <h3 className="comment-form-title">Leave a Comment</h3>
-        <form action="POST" id="comment">
-          <div className="comment-form-group">
-            <label htmlFor="name">Name</label>
-            <input type="text" name="name" id="name" />
-          </div>
-          <div className="comment-form-group">
-            <label htmlFor="email">Email</label>
-            <input type="email" name="email" id="email" />
-          </div>
-          <div className="comment-form-group">
-            <label htmlFor="message">Message</label>
-            <textarea name="message" id="message" cols="45" rows="8"></textarea>
-          </div>
-          <div className="comment-form-button">
-            <button type="submit">Send a comment</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    : ''
-  // : <Loading />
+
+  // return (
+  //   <div className="comment">
+  //     <CommentForm />
+  //   </div>
+  // )
 }
 export default Comments;

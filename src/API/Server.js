@@ -8,15 +8,15 @@ var bodyParser = require('body-parser');
 
 app.use(express.json());
 
-app.use(bodyParser.text());
-
-app.use(bodyParser.raw());
-
-app.use(bodyParser.json());
+// app.use(bodyParser.text());
 
 app.use(express.urlencoded({ extended: false }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.raw());
+
+app.use(bodyParser.json());
 
 let routes = require('./routes/blog.route');
 routes(app);

@@ -1,5 +1,5 @@
 import React from 'react';
-import loadingImage from '../../Assets/image/common/loading.gif'
+import loadingImage from '../../Assets/image/common/loading-page.gif'
 
 export default function Loading() {
   return (

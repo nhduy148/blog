@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../Assets/image/common/logo_white.png';
-import mainvisual from '../../Assets/image/banner/mainvisual.jpg';
+// import mainvisual from '../../Assets/image/banner/mainvisual.jpg';
+import mainvisual2 from '../../Assets/image/common/main-visual.png';
 
 export default function MainVisual() {
   return (
-    <section className="mainvisual flex-middle flex-column" style={{ backgroundImage: `url(${mainvisual})` }}>
+    <section className="mainvisual flex-middle flex-column" style={{ backgroundImage: `url(${mainvisual2})` }}>
       <div className="mainvisual-content">
         <h1 className="logo"><Link to="/"><img src={Logo} alt="" /></Link></h1>
         <h3 className="mainvisual-title">The Ultimate Guide for Switched-on News and Views</h3>

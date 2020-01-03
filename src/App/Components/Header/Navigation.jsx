@@ -16,9 +16,7 @@ export default class Navigation extends Component {
                 : ''
             }
           </ul>
-          {/* <!-- .navbar-collapse --> */}
         </div>
-        {/* <!-- .container --> */}
       </nav>
     )
   }

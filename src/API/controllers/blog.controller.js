@@ -38,6 +38,21 @@ let postQuery = [
   }
 ]
 
+const getNextID = (db, collectionName) => {
+  return new Promise(( resolve, reject ) => {
+    let counters = db.collection("counters");
+      return counters.findOneAndUpdate(
+      { field: `${collectionName}` },
+      { $inc: { value: 1 } },
+      { new: true },
+      (err, response) => {
+        if (err) reject(err);
+        else resolve(response);
+      }
+    );
+  })
+}
+
 
 module.exports = {
   home: (req, res) => {
@@ -94,7 +109,14 @@ module.exports = {
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
     let match = req.query.match ? `${req.query.match}` : {};
-    
+
+    let related = !!req.query.related && !!req.query.notin
+      ? {
+        tags: { $elemMatch: { slug: `${req.query.related}` } },
+        post_id: { $nin: [parseInt(req.query.notin)] }
+      }
+      : {};
+
     let orderBy = req.query.orderBy ? `${req.query.orderBy}` : "date";
     let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
     let limit = req.query.limit ? parseInt(req.query.limit) : 10;
@@ -107,7 +129,7 @@ module.exports = {
         posts.aggregate([
           ...postQuery,
           { $unwind: "$author" },
-          { $match: { status: "publish", post_type: post_type, ...match } },
+          { $match: { status: "publish", post_type: post_type, ...match, ...related } },
           {
             $project: {
               _id: false,
@@ -147,7 +169,7 @@ module.exports = {
 
   getVideos: (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');    
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
 
     let q = req.query.q ? req.query.q : "Online Tutorials";
     let order = req.query.order ? req.query.order : "date";
@@ -162,137 +184,162 @@ module.exports = {
         maxResults: maxResults
       }
     })
-    .then( data => res.json(data.data) )
-    .catch( err => res.json({err: "Somethings went wrong!"+err}))
-    
+      .then(data => res.json(data.data))
+      .catch(err => res.json({ err: "Somethings went wrong!" + err }))
+
   },
 
-  getPostDetials: (req, res) => {
+  getPostDetails: (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-    let post = 
-    isNaN( parseInt(req.params.post) )
-    ? `${req.params.post}`
-    : parseInt(req.params.post)
+    let post =
+      isNaN(parseInt(req.params.post))
+        ? `${req.params.post}`
+        : parseInt(req.params.post)
 
     DB.open()
-    .then( db=> db.collection("posts") )
-    .then( posts => {
+      .then(db => db.collection("posts"))
+      .then(posts => {
 
-      posts.aggregate([
-        ...postQuery,
-        { $match: {post_id: post} },
-        { $unwind: "$author" },
-        {
-          $project: {
-            _id: false,
-            post_id: 1,
-            title: 1,
-            content: 1,
-            except: 1,
-            slug: 1,
-            feature_image: 1,
-            date: 1,
-            view: 1,
-            category: 1,
-            tags: 1,
-            comments: 1,
-            author: "$author.nicename",
-            comment_count: {
-              $size: {
-                $reduce: {
-                  input: "$comments.reply",
-                  initialValue: "$comments",
-                  in: { $concatArrays: ["$$value", "$$this"] }
-                }
-              }
+        posts.aggregate([
+          ...postQuery,
+          { $match: { post_id: post } },
+          { $unwind: "$author" },
+          {
+            $project: {
+              _id: false,
+              post_id: 1,
+              title: 1,
+              content: 1,
+              except: 1,
+              slug: 1,
+              feature_image: 1,
+              date: 1,
+              view: 1,
+              category: 1,
+              tags: 1,
+              comment: {
+                total: {
+                  $size: {
+                    $reduce: {
+                      input: "$comments.reply",
+                      initialValue: "$comments",
+                      in: { $concatArrays: ["$$value", "$$this"] }
+                    }
+                  }
+                },
+                list: "$comments",
+              },
+              author: "$author.nicename",
+              // comment_count: {
+              //   $size: {
+              //     $reduce: {
+              //       input: "$comments.reply",
+              //       initialValue: "$comments",
+              //       in: { $concatArrays: ["$$value", "$$this"] }
+              //     }
+              //   }
+              // }
             }
-          }
-        },
-      ])
-      .toArray((err, data) => {
-        if (err) res.json({ err: "No posts yet!" });
-        else if( data[0] ) {
-          posts.findOneAndUpdate(
-            { "post_id": data[0].post_id },
-            { "$set": { "view": parseInt(data[0].view) + 1 } }
-          )
+          },
+        ])
+          .toArray((err, data) => {
+            if (err) res.json({ err: "No posts yet!" });
+            else if (data[0]) {
+              posts.findOneAndUpdate(
+                { "post_id": data[0].post_id },
+                { "$set": { "view": parseInt(data[0].view) + 1 } }
+              )
 
-          res.json(data[0]);
-        }
+              res.json(data[0]);
+            }
 
-        DB.close();
+            DB.close();
+          })
       })
-  })
-  .catch(err => res.json({ err: "Somthing went wrong!" }))
+      .catch(err => res.json({ err: "Somthing went wrong!" }))
   },
 
   getCommentByPostID: (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-    let post = 
-    isNaN( parseInt(req.params.post) )
-    ? `${req.params.post}`
-    : parseInt(req.params.post)
+    let limit = req.query.limit ? parseInt(req.query.limit) : 3;
+    let offSet = req.query.offSet ? req.query.offSet : 0;
+
+    let post =
+      isNaN(parseInt(req.params.post))
+        ? `${req.params.post}`
+        : parseInt(req.params.post)
 
     DB.open()
-    .then( db => db.collection("comments") )
-    .then( comments => {
-      comments.aggregate([
-        {
-          $lookup: {
-            from: 'comments',
-            localField: 'post_id',
-            foreignField: 'post_id',
-            as: 'comments'
-          }
-        },
-        { $match: { post_id: post, approved: true } },
-        {
-          $project: {
-            _id: false,
-            comments: 1,
-            // comment_count: {
-            //   $size: {
-            //     $reduce: {
-            //       input: "$comments.reply",
-            //       initialValue: "$comments",
-            //       in: { $concatArrays: ["$$value", "$$this"] }
-            //     }
-            //   }
-            // }
-          }
-        },
-      ])
-      .toArray((err, data) => {
-        
-        if (err) res.json({ err: "Somthing went wrong!" });
-        else if( !!data[0] ) {
-          let comments = data[0].comments;
+      .then(db => db.collection("comments"))
+      .then(comments => {
+        comments.find({ post_id: post, approved: true }).sort({ time: -1 }).limit(limit)
+          .toArray((err, data) => {
+            if (err) res.json({ err: "Somthing went wrong!" });
+            else if (data.length > 0) {
+              let total = data.length;
+              let list = data;
+              data.map(
+                comment => comment.reply = comment.reply.filter(reply => reply.approved === true)
+              )
+              res.json({ total, list })
+            }
+            else res.json({ err: "No comments yet!" });
 
-          comments.map(
-            comment => comment.reply = comment.reply.filter( reply => reply.approved === true )
-          )
-          res.json(comments)
-        }
-        else res.json({err: "No comments yet!"});
-
-        DB.close();
+            DB.close();
+          })
       })
-    })
-    .catch(err => res.json({ err: "Somthing went wrong!" }))
+      .catch(err => res.json({ err: "Somthing went wrong!" }))
+  },
+
+  postComment: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+
+    DB.open()
+      .then( db => {
+        const error = {err: "Somethings went wrong. Please try again!"}
+        let comments = db.collection("comments");
+
+        getNextID( db, "comment_id" )
+          .then( getCmtID => {
+            if( getCmtID.lastErrorObject.updatedExisting ) {
+              let data = {
+                comment_id: getCmtID.value.value,
+                post_id: parseInt(req.params.postID),
+                name: req.body.name,
+                email: req.body.email,
+                time: Date.now(),
+                content: req.body.content,
+                approved: true,
+                type: "text",
+                avatar: req.body.avatar,
+                is_user: false,
+                reply: []
+              };
+
+              comments.insertOne(data, (err, response) => {
+                if (err) return res.status(404).json(error)
+                else res.status(200).json(response);
+              })
+            }
+            else return res.status(404).json(error)
+          })
+          .catch( failed => res.status(404).json({...error, failed}) )
+      })
   },
 
   getPostsByCategory: (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-    let match = req.query.match ? `${req.query.match}` : {};  
+    let match = req.query.match ? `${req.query.match}` : {};
 
     let categoryParam = req.params.category;
-  
+
     let orderBy = req.query.orderBy ? `${req.query.orderBy}` : "date";
     let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
     let limit = req.query.limit ? parseInt(req.query.limit) : 10;
@@ -313,15 +360,17 @@ module.exports = {
         posts.aggregate([
           ...postQuery,
           { $unwind: "$author" },
-          { $match: { 
-            ...match, 
-            status: "publish", 
-            category: {
-              "$elemMatch": {
-                slug: categoryParam
+          {
+            $match: {
+              ...match,
+              status: "publish",
+              category: {
+                "$elemMatch": {
+                  slug: categoryParam
+                }
               }
             }
-          } },
+          },
           {
             $project: {
               _id: false,
@@ -352,20 +401,23 @@ module.exports = {
           .toArray((err, data) => {
             if (err || !data.length > 0) finalResult = { err: "No post in category yet!" };
             else {
-              const cate_info = data.map( 
-                post => post.category.map( (cate, i2) => { 
-                  if( post.category[i2].slug === categoryParam ) return post.category[i2];
-                } ) 
+              const cate_info = data.map(
+                post => post.category.map((cate, i2) => {
+                  if (post.category[i2].slug === categoryParam) return post.category[i2];
+                })
               )
-              
+
               finalResult = { ...finalResult, ...cate_info[0][0], posts: data };
             }
-            
+
 
             res.json(finalResult);
             DB.close();
           })
       })
       .catch(err => res.json({ err: "Somthing went wrong!" }))
+  },
+
+  test: (req, res) => {
   }
 }

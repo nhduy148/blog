@@ -19,6 +19,8 @@ import {
   HOME_GET_ARCHIVE_POSTS,
   FOOTER_GET_RECENT_POSTS,
   GET_POSTS_BY_CATEGORY,
+  GET_RELATED_POSTS,
+  ADD_COMMENT,
   
 } from '../Contants';
 
@@ -28,7 +30,6 @@ const defaultState = {
 }
 
 const blog = (state = defaultState, action) => {
-
   switch (action.type) {
     case PRE_LOADING:
       return{ 
@@ -79,11 +80,20 @@ const blog = (state = defaultState, action) => {
         fetchingPostDetails: action.fetchingPostDetails, 
         getPostDetailsStatus: action.getPostDetailsStatus 
       }
+    
+    case GET_RELATED_POSTS: 
+      return {
+        ...state,
+        relatedPosts: action.relatedPosts,
+        fetchingRelatedPosts: action.fetchingRelatedPosts,
+        getRelatedPostsStatus: action.getRelatedPostsStatus
+      }
 
     case GET_COMMENT_BY_POST:
       return { 
         ...state, 
         commentByPost: action.commentByPost, 
+        fetchingCommentByPost: action.fetchingCommentByPost,
         getCommentByPostStatus: action.getCommentByPostStatus 
       }
 
@@ -117,6 +127,13 @@ const blog = (state = defaultState, action) => {
         getPostsByCategoryStatus: action.getPostsByCategoryStatus
       }
       
+    case ADD_COMMENT:
+      return {
+        ...state,
+        commentHasAdded: action.commentHasAdded,
+        addCommentStatus: action.addCommentStatus,
+      }
+
     default:
       return state;
   }
