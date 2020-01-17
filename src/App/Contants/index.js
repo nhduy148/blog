@@ -12,4 +12,7 @@ export const FOOTER_GET_RECENT_POSTS = 'FOOTER_GET_RECENT_POSTS';
 export const GET_POSTS_BY_CATEGORY = 'GET_POSTS_BY_CATEGORY';
 export const GET_RELATED_POSTS = 'GET_RELATED_POSTS';
 export const ADD_COMMENT = 'ADD_COMMENT';
+export const LOAD_MORE_COMMENTS = 'LOAD_MORE_COMMENTS';
+export const RESET_STATE = 'RESET_STATE';
+export const LOADING = 'LOADING';
 // export const XXX = 'XXX';

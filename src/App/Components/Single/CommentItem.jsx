@@ -1,5 +1,5 @@
 import React from 'react';
-import default_user_icon from '../../Assets/image/common/comment-user-default.png'
+// import default_user_icon from '../../Assets/image/common/comment-user-default.png'
 
 const CommentItem = ({ comment }) => {
 
@@ -46,22 +46,22 @@ const CommentItem = ({ comment }) => {
         <p className="comment-content">{comment.content}</p>
       </div>
       {
-        !!comment.reply && comment.reply.length > 0
-          ? comment.reply.map((reply, i) =>
-            <div className="comment-item comment-item-reply flex-wrap" key={i}>
-              <div className="comment-avatar">
-                <img src={reply.avatar} alt="" />
-                {/* <img src={default_user_icon} alt="" /> */}
-              </div>
-              <div className="comment-info">
-                <h3 className="comment-name flex">{reply.name}<p className="comment-email">{reply.email}</p></h3>
-                <p className="comment-time">{timeSince(reply.time)}</p>
-              </div>
+        // !!comment.reply && comment.reply.length > 0
+        //   ? comment.reply.map((reply, i) =>
+        //     <div className="comment-item comment-item-reply flex-wrap" key={i}>
+        //       <div className="comment-avatar">
+        //         <img src={reply.avatar} alt="" />
+        //         {/* <img src={default_user_icon} alt="" /> */}
+        //       </div>
+        //       <div className="comment-info">
+        //         <h3 className="comment-name flex">{reply.name}<p className="comment-email">{reply.email}</p></h3>
+        //         <p className="comment-time">{timeSince(reply.time)}</p>
+        //       </div>
 
-              <p className="comment-content">{reply.content}</p>
-            </div>
-          )
-          : ''
+        //       <p className="comment-content">{reply.content}</p>
+        //     </div>
+        //   )
+        //   : ''
       }
     </div>
   )

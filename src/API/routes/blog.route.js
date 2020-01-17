@@ -1,5 +1,4 @@
-"use strict";
-let blogCtrl = require('../controllers/blog.controller')
+const blogCtrl = require('../controllers/blog.controller')
 
 module.exports = app => {
   app.get('/', blogCtrl.home)
@@ -14,11 +13,15 @@ module.exports = app => {
 
   app.get('/post/:post', blogCtrl.getPostDetails)
 
-  app.get('/comment/:post', blogCtrl.getCommentByPostID)
+  app.get('/comment/:post', blogCtrl.getComments)
 
   app.get('/category/:category', blogCtrl.getPostsByCategory)
 
-  app.post('/comment/:postID', blogCtrl.postComment)
+  app.post('/comment', blogCtrl.postComment)
 
   app.get('/test', blogCtrl.test);
+
+  app.get('/v2/posts', blogCtrl.getPostsV2)
+
+  app.get('/v2/comments/:post', blogCtrl.getCommentsV2)
 }

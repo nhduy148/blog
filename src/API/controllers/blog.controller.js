@@ -1,5 +1,3 @@
-'use strict';
-
 const DB = require('../DB/DB');
 const Youtube = require('../Youtube');
 
@@ -39,9 +37,9 @@ let postQuery = [
 ]
 
 const getNextID = (db, collectionName) => {
-  return new Promise(( resolve, reject ) => {
+  return new Promise((resolve, reject) => {
     let counters = db.collection("counters");
-      return counters.findOneAndUpdate(
+    return counters.findOneAndUpdate(
       { field: `${collectionName}` },
       { $inc: { value: 1 } },
       { new: true },
@@ -121,7 +119,6 @@ module.exports = {
     let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
     let limit = req.query.limit ? parseInt(req.query.limit) : 10;
     let post_type = req.query.post_type ? `${req.query.post_type}` : "post";
-    let offSet = req.query.offSet ? req.query.offSet : 0;
 
     DB.open()
       .then(db => db.collection("posts"))
@@ -160,7 +157,6 @@ module.exports = {
           .toArray((err, data) => {
             if (err || !data.length > 0) res.json({ err: "No posts yet!" });
             else res.json(data);
-
             DB.close();
           })
       })
@@ -261,12 +257,10 @@ module.exports = {
       .catch(err => res.json({ err: "Somthing went wrong!" }))
   },
 
-  getCommentByPostID: (req, res) => {
+  getComments: (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
-
     let limit = req.query.limit ? parseInt(req.query.limit) : 3;
-    let offSet = req.query.offSet ? req.query.offSet : 0;
 
     let post =
       isNaN(parseInt(req.params.post))
@@ -299,17 +293,21 @@ module.exports = {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
     res.setHeader('Access-Control-Allow-Methods', 'POST');
 
+    const replyFor = !!req.query.replyFor ? parseInt(req.query.replyFor) : null;
+    const replyQuery = !!replyFor ? { isReply: true, replyFor: replyFor } : { isReply: true }
+
+    
     DB.open()
-      .then( db => {
-        const error = {err: "Somethings went wrong. Please try again!"}
+      .then(db => {
+        const error = { err: "Somethings went wrong. Please try again!" }
         let comments = db.collection("comments");
 
-        getNextID( db, "comment_id" )
-          .then( getCmtID => {
-            if( getCmtID.lastErrorObject.updatedExisting ) {
+        getNextID(db, "comment_id")
+          .then(getCmtID => {
+            if (getCmtID.lastErrorObject.updatedExisting) {
               let data = {
                 comment_id: getCmtID.value.value,
-                post_id: parseInt(req.params.postID),
+                post_id: parseInt(req.body.postID),
                 name: req.body.name,
                 email: req.body.email,
                 time: Date.now(),
@@ -318,17 +316,23 @@ module.exports = {
                 type: "text",
                 avatar: req.body.avatar,
                 is_user: false,
-                reply: []
+                ...replyQuery
               };
 
               comments.insertOne(data, (err, response) => {
-                if (err) return res.status(404).json(error)
-                else res.status(200).json(response);
+                
+                if (err) return res.status(404).json({status: false, statusText: "Something went wrong! Please try later.", commentAdded: null});
+                else {
+                  let status = response.insertedCount === 1 ? true : false;
+                  let statusText = status ? "Add Success!" : "Something went wrong! Please try later.";
+                  let commentAdded = response.ops;
+                  res.status(200).json({ status: status, statusText: statusText, commentAdded: commentAdded });
+                }
               })
             }
             else return res.status(404).json(error)
           })
-          .catch( failed => res.status(404).json({...error, failed}) )
+          .catch(failed => res.status(404).json({ ...error, failed }))
       })
   },
 
@@ -418,6 +422,223 @@ module.exports = {
       .catch(err => res.json({ err: "Somthing went wrong!" }))
   },
 
+  getCommentsV2: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+    let limit = req.query.limit ? parseInt(req.query.limit) : 3;
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let offSet = ( limit * page ) - limit;
+
+    let post =
+      isNaN(parseInt(req.params.post))
+        ? `${req.params.post}`
+        : parseInt(req.params.post)
+
+    DB.open()
+      .then(db => db.collection("comments"))
+      .then(comments => {
+        comments.aggregate([
+          { $match: { post_id: post, approved: true } },
+          { $sort: { time: -1 } },
+          {
+            $group: {
+              _id: null,
+              total: { "$sum": 1 },
+              list: { "$push": "$$ROOT" }
+            }
+          },
+          { $unwind: "$list" },
+          { $skip: offSet },
+          { $limit: limit },
+          {
+            $group: {
+              _id: "$_id",
+              total: { "$first": "$total" },
+              list: { "$push": "$list" }
+            }
+          }
+        ])
+        .toArray((err, data) => {
+          if (err) res.json( err => res.json({ status: false, errCode: null, errorMessage: err }) );
+          else {
+            if( !!data[0] ) {
+              const total = data[0].total;
+              let totalPages = Math.ceil( total / limit )
+              let nextPage = page + 1 <= totalPages ? page + 1 : null;
+              let prevPage = 0 < page - 1 ? page - 1 : null;
+              let hasNextPage = nextPage !== null ? true : false;
+              let hasPrevPage = prevPage !== null ? true : false;
+              let remaining = total > (limit *  page) ? total - (limit *  page) : 0;
+
+              let info = {
+                total: total,
+                limit: limit,
+                page: page,
+                totalPages: totalPages,
+                hasNextPage: hasNextPage,
+                nextPage: nextPage,
+                hasPrevPage: hasPrevPage,
+                prevPage: prevPage,
+                remaining: remaining,
+              }
+              let list = data[0].list;
+
+              res.json({
+                status: true,
+                errCode: null,
+                errorMessage: "",
+                result: {
+                  ...info, list: list
+                }
+              });
+            }
+            else {
+              res.json({
+                status: true,
+                errCode: null,
+                errorMessage: "",
+                result: {     
+                  "total": 0,
+                  "limit": 0,
+                  "page": 0,
+                  "totalPages": 0,
+                  "hasNextPage": false,
+                  "nextPage": null,
+                  "hasPrevPage": false,
+                  "prevPage": null,
+                  "remaining": 0,
+                  "list": [] 
+                }
+              })
+            }
+          }
+
+          DB.close();
+        })
+      })
+      .catch( err => res.json({ status: false, errCode: null, errorMessage: err }) )
+  },
+
+  getPostsV2: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+    let match = req.query.match ? `${req.query.match}` : {};
+
+    let related = !!req.query.related && !!req.query.notin
+      ? {
+        tags: { $elemMatch: { slug: `${req.query.related}` } },
+        post_id: { $nin: [parseInt(req.query.notin)] }
+      }
+      : {};
+
+    let orderBy = req.query.orderBy ? `${req.query.orderBy}` : "date";
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    let post_type = req.query.post_type ? `${req.query.post_type}` : "post";
+    let offSet = ( limit * page ) - limit;
+
+    DB.open()
+      .then(db => db.collection("posts"))
+      .then(posts => {
+        posts.aggregate([
+          ...postQuery,
+          { $unwind: "$author" },
+          { $match: { status: "publish", post_type: post_type, ...match, ...related } },
+          { $sort: { [orderBy]: order } },
+          {
+            $group: {
+              _id: null,
+              total: { "$sum": 1 },
+              list: { "$push": "$$ROOT" }
+            }
+          },
+          { $unwind: "$list" },
+          { $skip: offSet },
+          { $limit: limit },
+          {
+            $group: {
+              _id: "$_id",
+              total: { "$first": "$total" },
+              list: { "$push": "$list" }
+            }
+          }
+        ])
+        .toArray((err, data) => {
+          if (err) res.json( err => res.json({ status: false, errCode: null, errorMessage: err }) );
+          else {
+            if( !!data[0] ) {
+              const total = data[0].total;
+              let totalPages = Math.ceil( total / limit )
+              let nextPage = page + 1 <= totalPages ? page + 1 : null;
+              let prevPage = 0 < page - 1 ? page - 1 : null;
+              let hasNextPage = nextPage !== null ? true : false;
+              let hasPrevPage = prevPage !== null ? true : false;
+              let remaining = total - (limit *  page);
+
+              let info = {
+                total: data[0].total,
+                limit: limit,
+                page: page,
+                totalPages: totalPages,
+                hasNextPage: hasNextPage,
+                nextPage: nextPage,
+                hasPrevPage: hasPrevPage,
+                prevPage: prevPage,
+                remaining: remaining,
+              }
+              let list = data[0].list;
+
+              res.json({
+                status: true,
+                errCode: null,
+                errorMessage: "",
+                result: {
+                  ...info, list: list
+                }
+              });
+            }
+            else {
+              res.json({
+                status: true,
+                errCode: null,
+                errorMessage: "",
+                result: {     
+                  "total": 0,
+                  "limit": 0,
+                  "page": 0,
+                  "totalPages": 0,
+                  "hasNextPage": false,
+                  "nextPage": null,
+                  "hasPrevPage": false,
+                  "prevPage": null,
+                  "list": [] 
+                }
+              })
+            }
+          }
+
+          DB.close();
+        })
+    })
+    .catch( err => res.json({ status: false, errCode: null, errorMessage: err }) )
+  },
+
   test: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+    DB.open()
+    .then( db => db.collection("comments") )
+    .then( comments => {
+      comments.updateMany({}, {$set: { isReply: false }}, (err, result) => {
+        if(err) res.json(err);
+        else res.json(result);
+      })
+    })
+    .catch( err => res.json(err) )
+
   }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { fetchPostDetails, fetchRelatedPosts, fetchCommentByPost } from '../Actions'
+import { fetchPostDetails, fetchRelatedPosts } from '../Actions'
 
 import Header from '../Layout/Header';
 import Main from '../Layout/Main';
@@ -17,7 +17,6 @@ class Single extends Component {
   componentDidMount() {
     let post_slug = this.props.match.params.slug;    
     this.props.fetchPostDetails(post_slug);    
-    this.props.fetchCommentByPost(post_slug);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -27,7 +26,6 @@ class Single extends Component {
     
     if( nextSlug !== prevSlug ) {
       this.props.fetchPostDetails(nextSlug); 
-      this.props.fetchCommentByPost(nextSlug);   
       postID = nextSlug;
     }
     let oldStatus = this.props.getPostDetailsStatus;
@@ -47,8 +45,6 @@ class Single extends Component {
     let { 
       postDetails, fetchingPostDetails, getPostDetailsStatus, 
       relatedPosts, fetchingRelatedPosts, getRelatedPostsStatus,
-      commentByPost, fetchingCommentByPost, getCommentByPostStatus, 
-      commentHasAdded, addCommentStatus
     } = this.props;
 
     let postID = this.props.match.params.slug;
@@ -73,14 +69,7 @@ class Single extends Component {
                 fetchingRelatedPosts={fetchingRelatedPosts} 
                 getRelatedPostsStatus={getRelatedPostsStatus} 
               />
-              <Comments 
-                commentByPost={commentByPost} 
-                fetchingCommentByPost={fetchingCommentByPost} 
-                getCommentByPostStatus={getCommentByPostStatus} 
-                addCommentStatus={addCommentStatus} 
-                commentHasAdded={commentHasAdded} 
-                postID={postID}
-              />
+              <Comments postID={postID} />
             </section>
           }
           haveSidebar= {true}
@@ -99,13 +88,6 @@ const mapStateToProps = (state) => ({
   relatedPosts: state.relatedPosts,
   fetchingRelatedPosts: state.fetchingRelatedPosts,
   getRelatedPostsStatus: state.getRelatedPostsStatus,
-
-  commentByPost: state.commentByPost,
-  fetchingCommentByPost: state.fetchingCommentByPost,
-  getCommentByPostStatus: state.getCommentByPostStatus,
-
-  commentHasAdded: state.commentHasAdded,
-  addCommentStatus: state.addCommentStatus
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -115,9 +97,9 @@ const mapDispatchToProps = dispatch => ({
   fetchRelatedPosts: (tag, postID) => {
     dispatch( fetchRelatedPosts(tag, postID) );
   },
-  fetchCommentByPost: (post_slug) => {
-    dispatch( fetchCommentByPost(post_slug) );
-  }
+  // fetchCommentByPost: (post_slug, next) => {
+  //   dispatch( fetchCommentByPost(post_slug, next) );
+  // }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Single)

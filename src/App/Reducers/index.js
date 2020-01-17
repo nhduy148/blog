@@ -21,15 +21,21 @@ import {
   GET_POSTS_BY_CATEGORY,
   GET_RELATED_POSTS,
   ADD_COMMENT,
+  LOAD_MORE_COMMENTS,
+  RESET_STATE,
+  LOADING,
   
 } from '../Contants';
 
 
 const defaultState = {
-  loading: false,
+  loading: {},
+  listComments: [],
+  listCommentsInfo: {},
 }
 
 const blog = (state = defaultState, action) => {
+  console.log(action.type);
   switch (action.type) {
     case PRE_LOADING:
       return{ 
@@ -92,7 +98,8 @@ const blog = (state = defaultState, action) => {
     case GET_COMMENT_BY_POST:
       return { 
         ...state, 
-        commentByPost: action.commentByPost, 
+        listComments: action.listComments,
+        listCommentsInfo: action.listCommentsInfo, 
         fetchingCommentByPost: action.fetchingCommentByPost,
         getCommentByPostStatus: action.getCommentByPostStatus 
       }
@@ -130,8 +137,31 @@ const blog = (state = defaultState, action) => {
     case ADD_COMMENT:
       return {
         ...state,
-        commentHasAdded: action.commentHasAdded,
+        addCommentReponse: action.addCommentReponse,
         addCommentStatus: action.addCommentStatus,
+      }
+
+    case LOAD_MORE_COMMENTS:
+      return {
+        ...state,
+        listComments: [...state.listComments, ...action.listComments],
+        listCommentsInfo: {...state.listCommentsInfo, ...action.listCommentsInfo}, 
+        fetchingCommentByPost: action.fetchingCommentByPost,
+        getCommentByPostStatus: action.getCommentByPostStatus 
+      }
+    
+    case RESET_STATE:
+      return {
+        defaultState : {
+          listComments: [],
+          listCommentsInfo: {}, 
+        }
+      }
+
+    case LOADING:
+      return {
+        ...state,
+        loadingObject: {...state.loading, ...action.loadingObject},
       }
 
     default:

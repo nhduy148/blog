@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { actionAddComment } from '../../Actions';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-function CommentForm({postID, actionAddComment}) {
+function CommentForm({postID}) {
+
+  const dispatch = useDispatch();
+  let addCommentStatus = useSelector( state => state.addCommentStatus )
 
   async function addComment(e, postID) {
     e.preventDefault();
-    const data = await {
+    let data = await {
       name: e.target.name.value,
       email: e.target.email.value,
       content: e.target.content.value,
-      avatar: e.target.avatar.value
+      avatar: e.target.avatar.value,
+      postID: postID
     }
-    actionAddComment(postID, data)
+    dispatch( actionAddComment(data) );
   }
-
-  const avatarArr = [
+  let avatarArr = [
     {name: "Iron Man", url: "/avatar/iron-man.jpg"},
     {name: "Spider Man", url: "/avatar/spider-man.jpg"},
     {name: "Captain America", url: "/avatar/cap.jpg"},
@@ -29,6 +32,13 @@ function CommentForm({postID, actionAddComment}) {
 
   const [avt, setAvt] = useState(avatarArr[0]);
   const [choice, setChoice] = useState(false);
+
+  useEffect(() => {
+    if(addCommentStatus) {
+      setAvt(avatarArr[0]);
+      setChoice(false);
+    }
+  }, [addCommentStatus, avatarArr])
 
   return (
     <div className="comment-form">
@@ -78,12 +88,4 @@ function CommentForm({postID, actionAddComment}) {
   )
 }
 
-const mapDispatch = dispatch => {
-  return {
-    actionAddComment: (postID, data) => {
-      dispatch( actionAddComment(postID, data) );
-    }
-  }
-}
-
-export default connect(null, mapDispatch)(CommentForm)
+export default CommentForm

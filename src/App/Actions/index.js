@@ -12,7 +12,10 @@ import {
   FOOTER_GET_RECENT_POSTS,
   GET_POSTS_BY_CATEGORY,
   GET_RELATED_POSTS,
-  ADD_COMMENT
+  ADD_COMMENT,
+  LOAD_MORE_COMMENTS,
+  RESET_STATE,
+  LOADING,
 
 }
 from '../Contants';
@@ -86,9 +89,10 @@ export const getRelatedPosts = (relatedPosts, fetchingRelatedPosts, getRelatedPo
   getRelatedPostsStatus
 })
 
-export const getCommentByPost = (commentByPost, fetchingCommentByPost, getCommentByPostStatus) => ({
+export const getCommentByPost = (listComments, listCommentsInfo, fetchingCommentByPost, getCommentByPostStatus) => ({
   type: GET_COMMENT_BY_POST,
-  commentByPost,
+  listComments,
+  listCommentsInfo,
   fetchingCommentByPost,
   getCommentByPostStatus
 })
@@ -106,10 +110,33 @@ export const getPostsByCategory = (categoryPosts, fetchingPostsByCategory, getPo
   getPostsByCategoryStatus
 })
 
-export const addComment = (commentHasAdded, addCommentStatus) => ({
+export const addComment = (addCommentReponse, addCommentStatus) => ({
   type: ADD_COMMENT,
-  commentHasAdded,
+  addCommentReponse,
   addCommentStatus,
+})
+
+export const resetState = () => ({
+  type: RESET_STATE,
+})
+
+export const setLoading = (loadingObject) => ({
+  type: LOADING,
+  loadingObject
+})
+
+export function actionResetState() {
+  return dispatch => {
+    dispatch(resetState());
+  }
+}
+
+export const getMoreComments = (listComments, listCommentsInfo, fetchingCommentByPost, getCommentByPostStatus) => ({
+  type: LOAD_MORE_COMMENTS,
+  listComments,
+  listCommentsInfo,
+  fetchingCommentByPost,
+  getCommentByPostStatus
 })
 
 // ********************************************************************************************************************************** //
@@ -154,8 +181,7 @@ export function fetchPostDetails(post_slug) {
 
     return Axios.get(API+"/post/" + post_slug)
       .then(data => {
-        dispatch(getPostDetails(data.data, false, true))        
-
+        dispatch(getPostDetails(data.data, false, true))
         // Fetch comments by post
         // Axios.get(`http://localhost:5003/comment/${post_slug}?limit=3`)
         // .then(data => {
@@ -180,14 +206,42 @@ export function fetchRelatedPosts(tag, postID) {
 
 export function fetchCommentByPost(post_slug) {
   return dispatch => {
-    dispatch(getCommentByPost(null, true, false));
+    dispatch(getCommentByPost([], {}, true, false))
 
-    return Axios.get(`${API}/comment/${post_slug}?limit=3`)
+    return Axios.get(`${API}/v2/comments/${post_slug}?limit=3`)
       .then(data => {
-        if( !!data.data.err ) dispatch(getCommentByPost(data.data, false, false));
-        else dispatch(getCommentByPost(data.data, false, true))
+        const rawData = data.data.result;
+        const list = rawData.list
+        const info = Object.keys(rawData).reduce( 
+          (obj, key) => { 
+            if(key !== "list") obj[key] = rawData[key];
+            return obj 
+          }, {} )
+          
+        dispatch(getCommentByPost( list, info, false, data.data.status))
       })
-      .catch(err => dispatch(getCommentByPost(null, false, false)))
+      .catch(err => dispatch(getCommentByPost(null, null, false, false)))
+  }
+}
+
+export function loadMoreComments(post_slug, next) {
+  const loadmore = !!next ? true : false;
+  return dispatch => {
+    dispatch(getMoreComments([], {}, true, loadmore))
+
+    return Axios.get(`${API}/v2/comments/${post_slug}?limit=3${!!next ? `&page=${next}` : ''}`)
+      .then(data => {
+        const rawData = data.data.result;
+        const list = rawData.list
+        const info = Object.keys(rawData).reduce( 
+          (obj, key) => { 
+            if(key !== "list") obj[key] = rawData[key];
+            return obj 
+          }, {} )
+          
+        dispatch(getMoreComments( list, info, false, data.data.status))
+      })
+      .catch(err => dispatch(getMoreComments(null, null, false, false)))
   }
 }
 
@@ -242,30 +296,22 @@ export function fetchPostsByCategory(category) {
   }
 }
 
-export function actionAddComment(postID, data) {
+export function actionAddComment(data) {
   return dispatch => {
     dispatch( addComment(null, false) );
-    return Axios(`${API}/comment/${postID}`, {
+    // dispatch(getMoreComments( [], {}, true, true))
+
+    return Axios(`${API}/comment/`, {
       method: "POST",
       data:  querystring.stringify(data)
     })
     .then( data => {
-      const commentHasAdded = data.data.ops[0];
-      console.log(data.data)
-      dispatch( addComment( commentHasAdded, true ) )
+      const commentAdded = data.data.commentAdded;
+      const status = data.data.status;
+      const statusText = data.data.statusText;
+      dispatch( addComment( status, statusText ) )
+      // dispatch( getMoreComments( commentAdded, {}, false, true) )
     })
-    .catch( err => dispatch( addComment(null, false) ) )
+    .catch( err => dispatch( addComment(false, "Something went wrong! Please try later." ) ) )
   }
 }
-
-
-
-// "total": 50,
-// "limit": 10,
-// "page": 2,
-// "totalPages": 5,
-// "hasNextPage": true,
-// "nextPage": 3,
-// "hasPrevPage": true,
-// "prevPage": 1,
-// "pagingCounter": 11
