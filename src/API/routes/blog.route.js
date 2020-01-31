@@ -17,11 +17,17 @@ module.exports = app => {
 
   app.get('/category/:category', blogCtrl.getPostsByCategory)
 
-  app.post('/comment', blogCtrl.postComment)
+  app.get('/tag/:tag', blogCtrl.getPostsByTag)
 
-  app.get('/test', blogCtrl.test);
+  app.post('/comment', blogCtrl.postComment)
 
   app.get('/v2/posts', blogCtrl.getPostsV2)
 
   app.get('/v2/comments/:post', blogCtrl.getCommentsV2)
+
+  app.post('/login', blogCtrl.auth)
+
+  app.get('/test', blogCtrl.test)
+
+  app.post('/test', blogCtrl.test)
 }

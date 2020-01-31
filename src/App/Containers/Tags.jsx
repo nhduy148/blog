@@ -4,27 +4,27 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Main from '../Layout/Main';
 import Banner from '../Components/General/Banner';
-import { fetchPostsByCategory } from '../Actions'
+import { fetchPostsByTag } from '../Actions'
 import Loading from '../Components/General/Loading';
 import PostItem from '../Components/General/PostItem';
 
 class Category extends Component {
 
   componentDidMount() {
-    let category = this.props.match.params.category;
-    this.props.fetchPostsByCategory(category);
+    let tag = this.props.match.params.tag;
+    this.props.fetchPostsByTag(tag);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    let oldCategory = this.props.match.params.category;
-    let newCategory = nextProps.match.params.category;
-    if (oldCategory !== newCategory) this.props.fetchPostsByCategory(newCategory);
+    let oldTag = this.props.match.params.tag;
+    let newTag = nextProps.match.params.tag;
+    if (oldTag !== newTag) this.props.fetchPostsByTag(newTag);
   }
 
   render() {
     let post_layout = "vertical";
-    let { categoryPosts, fetchingPostsByCategory, getPostsByCategoryStatus } = this.props;
-    let banner_title = !!categoryPosts && categoryPosts.name ? `Category : ${categoryPosts.name}` : categoryPosts;
+    let { tagPosts, fetchingPostsByTag, getPostsByTagStatus } = this.props;
+    let banner_title = !!tagPosts && tagPosts.name ? `Tag : ${tagPosts.name}` : tagPosts;
 
     return (
       <>
@@ -34,14 +34,14 @@ class Category extends Component {
           componentInside={
             <div className="container">
               {
-                fetchingPostsByCategory
+                fetchingPostsByTag
                   ? <Loading />
-                  : getPostsByCategoryStatus
+                  : getPostsByTagStatus
                     ? <div className={`post-list post-list--${post_layout} post-list--2col`}>
                       {
-                        !!categoryPosts.err
-                          ? <h3>{categoryPosts.err}</h3> || <h3>No posts found</h3>
-                          : categoryPosts.posts.map(post => <PostItem key={post.post_id} post={post} />)
+                        !!tagPosts.err
+                          ? <h3>{tagPosts.err}</h3> || <h3>No posts found</h3>
+                          : tagPosts.posts.map(post => <PostItem key={post.post_id} post={post} />)
                       }
                     </div>
                     : <h1>No post yet!</h1>
@@ -57,15 +57,15 @@ class Category extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  categoryPosts: state.categoryPosts,
-  fetchingPostsByCategory: state.fetchingPostsByCategory,
-  getPostsByCategoryStatus: state.getPostsByCategoryStatus
+  tagPosts: state.tagPosts,
+  fetchingPostsByTag: state.fetchingPostsByTag,
+  getPostsByTagStatus: state.getPostsByTagStatus
 })
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchPostsByCategory: (category) => {
-      dispatch(fetchPostsByCategory(category))
+    fetchPostsByTag: (tag) => {
+      dispatch(fetchPostsByTag(tag))
     }
   }
 }

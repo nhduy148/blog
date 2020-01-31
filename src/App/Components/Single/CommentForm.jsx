@@ -6,6 +6,7 @@ function CommentForm({postID}) {
 
   const dispatch = useDispatch();
   let addCommentStatus = useSelector( state => state.addCommentStatus )
+  let addCommentReponse = useSelector( state => state.addCommentReponse )
 
   async function addComment(e, postID) {
     e.preventDefault();
@@ -34,27 +35,29 @@ function CommentForm({postID}) {
   const [choice, setChoice] = useState(false);
 
   useEffect(() => {
-    if(addCommentStatus) {
-      setAvt(avatarArr[0]);
+    if(addCommentReponse === true) {
       setChoice(false);
     }
-  }, [addCommentStatus, avatarArr])
+  }, [addCommentReponse])
 
   return (
     <div className="comment-form">
+      <div className={`comment-status${!!addCommentReponse ? " is-open" : "" }`}>
+        <p>{addCommentStatus}</p>
+      </div>
       <h3 className="c-title2">Leave a Comment</h3>
       <form action="POST" id="comment" onSubmit={(e) => addComment(e, postID)}>
         <div className="comment-form-group">
           <label htmlFor="name">Name</label>
-          <input type="text" name="name" id="name" />
+          <input type="text" name="name" id="name" required/>
         </div>
         <div className="comment-form-group">
           <label htmlFor="email">Email</label>
-          <input type="email" name="email" id="email" />
+          <input type="email" name="email" id="email" required />
         </div>
         <div className="comment-form-group">
           <label htmlFor="content">Message</label>
-          <textarea name="content" id="content" cols="45" rows="8"></textarea>
+          <textarea name="content" id="content" cols="45" rows="8" required></textarea>
         </div>
         <div className="comment-form-group choice-avt">
           <label htmlFor="link">Choice avatar : </label>

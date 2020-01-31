@@ -24,10 +24,10 @@ function Comments({ postID }) {
     listCommentsInfo,
     getCommentByPostStatus,
     fetchingCommentByPost,
-    addCommentStatus,
+    addCommentReponse,
   } = props;
   
-  const dispatch = useDispatch();
+  let dispatch = useDispatch();
   
   const totalComments = (total) => {
     return total > 1 ?
@@ -39,8 +39,13 @@ function Comments({ postID }) {
 
   useEffect(() => {
     if(postID) dispatch( fetchCommentByPost(postID) );
-    if(addCommentStatus) document.getElementById("comment").reset();
-  }, [postID, addCommentStatus, dispatch]);
+  }, [postID, dispatch]);
+
+  useEffect(() => {
+    if(addCommentReponse === true) {
+      document.getElementById("comment").reset();
+    }
+  }, [addCommentReponse]);
 
 
   const remaining = !!listCommentsInfo && listCommentsInfo.remaining > 0 ? "See more" : false;
@@ -64,7 +69,7 @@ function Comments({ postID }) {
                   getCommentByPostStatus && remaining !== false
                   ? fetchingCommentByPost 
                     ? PreLoading 
-                    : <div className="remaining">
+                    : <div className="comment-remaining">
                         <span onClick={() => dispatch(loadMoreComments(postID, nextListComments))}>{remaining}</span>
                       </div>
                   : ""

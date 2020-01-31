@@ -5,7 +5,7 @@ import banner from '../../Assets/image/banner/banner-5.jpg';
 
 export default function Banner({ title, background}) {
   let background_url = !!background ? `url(${background})` : `url(${banner})`;
-  title = !!title ? title : "<span></span><span></span><span></span>";
+  title = !!title && title.err ? title.err : !!title ? title : "<span></span><span></span><span></span>";
 
   return (
     <div className="banner flex-middle" style={{backgroundImage: background_url}}>

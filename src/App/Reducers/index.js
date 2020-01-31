@@ -19,6 +19,7 @@ import {
   HOME_GET_ARCHIVE_POSTS,
   FOOTER_GET_RECENT_POSTS,
   GET_POSTS_BY_CATEGORY,
+  GET_POSTS_BY_TAG,
   GET_RELATED_POSTS,
   ADD_COMMENT,
   LOAD_MORE_COMMENTS,
@@ -35,7 +36,7 @@ const defaultState = {
 }
 
 const blog = (state = defaultState, action) => {
-  console.log(action.type);
+  // console.log(action.type);
   switch (action.type) {
     case PRE_LOADING:
       return{ 
@@ -132,6 +133,14 @@ const blog = (state = defaultState, action) => {
         categoryPosts: action.categoryPosts,
         fetchingPostsByCategory: action.fetchingPostsByCategory,
         getPostsByCategoryStatus: action.getPostsByCategoryStatus
+      }
+
+    case GET_POSTS_BY_TAG:
+      return {
+        ...state,
+        tagPosts: action.tagPosts,
+        fetchingPostsByTag: action.fetchingPostsByTag,
+        getPostsByTagStatus: action.getPostsByTagStatus
       }
       
     case ADD_COMMENT:

@@ -1,5 +1,8 @@
 const DB = require('../DB/DB');
 const Youtube = require('../Youtube');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 
 let postQuery = [
   {
@@ -181,7 +184,7 @@ module.exports = {
       }
     })
       .then(data => res.json(data.data))
-      .catch(err => res.json({ err: "Somethings went wrong!" + err }))
+      .catch(err => res.json({ err: "Something went wrong!" + err }))
 
   },
 
@@ -299,7 +302,7 @@ module.exports = {
     
     DB.open()
       .then(db => {
-        const error = { err: "Somethings went wrong. Please try again!" }
+        const error = { err: "Something went wrong. Please try again!" }
         let comments = db.collection("comments");
 
         getNextID(db, "comment_id")
@@ -408,6 +411,84 @@ module.exports = {
               const cate_info = data.map(
                 post => post.category.map((cate, i2) => {
                   if (post.category[i2].slug === categoryParam) return post.category[i2];
+                })
+              )
+
+              finalResult = { ...finalResult, ...cate_info[0][0], posts: data };
+            }
+
+
+            res.json(finalResult);
+            DB.close();
+          })
+      })
+      .catch(err => res.json({ err: "Somthing went wrong!" }))
+  },
+
+  getPostsByTag: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+    let match = req.query.match ? `${req.query.match}` : {};
+
+    let tagParam = req.params.tag;
+
+    let orderBy = req.query.orderBy ? `${req.query.orderBy}` : "date";
+    let order = req.query.order === "ASC" ? 1 : req.query.order === "DESC" ? -1 : -1;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+
+    let finalResult = {};
+
+    DB.open()
+      .then(db => {
+        let posts = db.collection("posts")
+        posts.aggregate([
+          ...postQuery,
+          { $unwind: "$author" },
+          {
+            $match: {
+              ...match,
+              status: "publish",
+              tags: {
+                "$elemMatch": {
+                  slug: tagParam
+                }
+              }
+            }
+          },
+          {
+            $project: {
+              _id: false,
+              post_id: 1,
+              title: 1,
+              except: 1,
+              slug: 1,
+              feature_image: 1,
+              date: 1,
+              view: 1,
+              category: 1,
+              tags: 1,
+              author: "$author.nicename",
+              comment_count: {
+                $size: {
+                  $reduce: {
+                    input: "$comments.reply",
+                    initialValue: "$comments",
+                    in: { $concatArrays: ["$$value", "$$this"] }
+                  }
+                }
+              }
+            }
+          },
+          { $sort: { [orderBy]: order } },
+          { $limit: limit },
+        ])
+          .toArray((err, data) => {
+            if (err || !data.length > 0) finalResult = { err: "No post in tag yet!" };
+            else {
+              const cate_info = data.map(
+                post => post.tags.map((cate, i2) => {
+                  if (post.tags[i2].slug === tagParam) return post.tags[i2];
                 })
               )
 
@@ -626,19 +707,84 @@ module.exports = {
     .catch( err => res.json({ status: false, errCode: null, errorMessage: err }) )
   },
 
-  test: (req, res) => {
+  auth: (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+
+    let { username, password } = req.body;
 
     DB.open()
-    .then( db => db.collection("comments") )
-    .then( comments => {
-      comments.updateMany({}, {$set: { isReply: false }}, (err, result) => {
-        if(err) res.json(err);
-        else res.json(result);
+    .then( db => db.collection("users") )
+    .then( users => {
+      users.findOne( {username: username}, (err, user) => {
+        if(err) res.status(404).json({ status: false, error: "Something went wrong" });
+        else if(!user) res.status(422).json({ status: false, error: "User not found!" })
+        else {          
+          bcrypt.compare(password, user.password)
+          .then( response => {
+            if(response === true) {
+              jwt.sign(user, 'key', (err, token) => {
+                if(err) res.status(404).json({ status: false, error: "Something went wrong" });
+                else {
+                  res.cookie("token", token, {
+                    maxAge: 3 * 24 * 60 * 60 * 1000,
+                    httpOnly: true,
+                    //secure: true;
+                  })
+                  res.status(200).json({ status: true, result: "Login Successful!", token: token });
+                }
+              })
+            }
+            else res.status(200).json({ status: false, error: "Wrong passwrod!" })
+          } )
+          .catch( err => res.status(200).json({ status: false, error: err }) )
+        }
       })
     })
-    .catch( err => res.json(err) )
+  },
 
+  registerAccount: (req, res, next) => {
+    
+  },
+
+  test: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+
+    let { username, password, nicename, email } = req.body;
+
+    DB.open()
+    .then( db => {
+      const users = db.collection("users");
+
+      getNextID(db, "user_id")
+      .then( userID => {
+        if(userID.lastErrorObject.updatedExisting) {
+          const data = {
+            user_id: userID.value.value,
+            username: username,
+            password: password,
+            nicename: nicename,
+            email: email,
+            user_image: "",
+            active_key: "",
+            role: 1,
+            meta: {}
+          }
+          // users.insertOne(data, (err, result) => {
+          //   if( err ) res.status(404).json({status: false, result: "Something went wrong."})
+          //   else {
+              
+          //   }
+          // })
+
+          users.update( {username: username}, { $set: data }, { upsert: true }, (err, user) => {
+            if(err) res.status(404).json({ status: false, error: "Something went wrong." });
+            // else if(user) res.status(422).json({ status: false, error: "User already exist!" })
+            else res.status(200).json(user)
+          })
+        }
+      })
+    })
   }
 }

@@ -11,6 +11,7 @@ import {
   HOME_GET_ARCHIVE_POSTS,
   FOOTER_GET_RECENT_POSTS,
   GET_POSTS_BY_CATEGORY,
+  GET_POSTS_BY_TAG,
   GET_RELATED_POSTS,
   ADD_COMMENT,
   LOAD_MORE_COMMENTS,
@@ -108,6 +109,13 @@ export const getPostsByCategory = (categoryPosts, fetchingPostsByCategory, getPo
   categoryPosts,
   fetchingPostsByCategory,
   getPostsByCategoryStatus
+})
+
+export const getPostsByTag = (tagPosts, fetchingPostsByTag, getPostsByTagStatus) => ({
+  type: GET_POSTS_BY_TAG,
+  tagPosts,
+  fetchingPostsByTag,
+  getPostsByTagStatus
 })
 
 export const addComment = (addCommentReponse, addCommentStatus) => ({
@@ -296,10 +304,19 @@ export function fetchPostsByCategory(category) {
   }
 }
 
+export function fetchPostsByTag(tag) {
+  return dispatch => {
+    dispatch(getPostsByTag(null, true, false))
+
+    return Axios.get(API+"/tag/"+tag)
+      .then(data => { /*console.log(data);*/ dispatch(getPostsByTag(data.data, false, true)) })
+      .catch(err => dispatch(getPostsByTag(null, false, false)))
+  }
+}
+
 export function actionAddComment(data) {
   return dispatch => {
-    dispatch( addComment(null, false) );
-    // dispatch(getMoreComments( [], {}, true, true))
+    // dispatch( addComment(null, false) );
 
     return Axios(`${API}/comment/`, {
       method: "POST",
@@ -310,8 +327,21 @@ export function actionAddComment(data) {
       const status = data.data.status;
       const statusText = data.data.statusText;
       dispatch( addComment( status, statusText ) )
-      // dispatch( getMoreComments( commentAdded, {}, false, true) )
+
+      setTimeout(() => {
+        dispatch( addComment(null, false) );
+        dispatch(getMoreComments( [], {}, true, true))
+        dispatch( getMoreComments( commentAdded, {}, false, true) )
+      }, 500)
     })
-    .catch( err => dispatch( addComment(false, "Something went wrong! Please try later." ) ) )
+    .catch( err => {
+      dispatch( addComment(false, "Something went wrong! Please try later." ) ) 
+
+      setTimeout(() => {
+        dispatch( addComment(null, false) );
+        dispatch(getMoreComments( [], {}, true, true))
+        dispatch( getMoreComments( [], {}, false, true) )
+      }, 500)
+    })
   }
 }

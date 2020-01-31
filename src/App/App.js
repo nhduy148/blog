@@ -12,6 +12,7 @@ import Page404 from './Containers/Page404'
 import Single from './Containers/Single';
 import ScrollToTop from './Components/General/ScrollToTop';
 import Category from './Containers/Category';
+import Tags from './Containers/Tags';
 
 export const store = createStore(
   reducer,
@@ -26,7 +27,7 @@ class App extends Component {
           <Switch>
             <Route exact path='/' component={Home} />
             <Route path='/category/:category' component={Category} />
-            {/* <Route exact path='/tag/:tag' component={Home} /> */}
+            <Route path='/tag/:tag' component={Tags} />
             <Route path='/post/:slug' component={Single} />
             <Route exact path='*' component={Page404} />
           </Switch>
