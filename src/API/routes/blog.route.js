@@ -25,9 +25,5 @@ module.exports = app => {
 
   app.get('/v2/comments/:post', blogCtrl.getCommentsV2)
 
-  app.post('/login', blogCtrl.auth)
-
-  app.get('/test', blogCtrl.test)
-
-  app.post('/test', blogCtrl.test)
+  // app.post('/test', blogCtrl.test)
 }

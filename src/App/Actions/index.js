@@ -15,8 +15,11 @@ import {
   GET_RELATED_POSTS,
   ADD_COMMENT,
   LOAD_MORE_COMMENTS,
-  RESET_STATE,
-  LOADING,
+  // RESET_STATE,
+  // LOADING,
+  SIGN_IN,
+  SIGN_UP,
+  AUTHENTICATION
 
 }
 from '../Contants';
@@ -24,7 +27,7 @@ from '../Contants';
 import Axios from 'axios';
 const querystring = require('querystring');
 
-const API = "http://localhost:5003"
+const API_URL = "http://localhost:5003"
 
 // ********************************************************************************************************************************** //
 export const loading = preLoading => ({
@@ -124,20 +127,20 @@ export const addComment = (addCommentReponse, addCommentStatus) => ({
   addCommentStatus,
 })
 
-export const resetState = () => ({
-  type: RESET_STATE,
-})
+// export const resetState = () => ({
+//   type: RESET_STATE,
+// })
 
-export const setLoading = (loadingObject) => ({
-  type: LOADING,
-  loadingObject
-})
+// export const setLoading = (loadingObject) => ({
+//   type: LOADING,
+//   loadingObject
+// })
 
-export function actionResetState() {
-  return dispatch => {
-    dispatch(resetState());
-  }
-}
+// export function actionResetState() {
+//   return dispatch => {
+//     dispatch(resetState());
+//   }
+// }
 
 export const getMoreComments = (listComments, listCommentsInfo, fetchingCommentByPost, getCommentByPostStatus) => ({
   type: LOAD_MORE_COMMENTS,
@@ -147,11 +150,30 @@ export const getMoreComments = (listComments, listCommentsInfo, fetchingCommentB
   getCommentByPostStatus
 })
 
+export const signin = (signinStatus, signinStatusText, token) => ({
+  type: SIGN_IN,
+  signinStatus,
+  signinStatusText,
+  token
+})
+
+export const signup = ( signupStatus, signupStatusText ) => ({
+  type: SIGN_UP,
+  signupStatus,
+  signupStatusText,
+})
+
+export const authen = ( isLogged, currentUser ) => ({
+  type: AUTHENTICATION,
+  isLogged,
+  currentUser
+})
+
 // ********************************************************************************************************************************** //
 
 export function fetchCategoryList() {
   return dispatch => {
-    return Axios.get(API+"/categories")
+    return Axios.get(API_URL+"/categories")
       .then(data => dispatch(getCategoryList(data.data, true)))
       .catch(err => dispatch(getCategoryList(null, false)))
   }
@@ -160,7 +182,7 @@ export function fetchCategoryList() {
 export function fetchTagList() {
   return dispatch => {
 
-    return Axios.get(API+"/tags")
+    return Axios.get(API_URL+"/tags")
       .then(data => dispatch(getTagList(data.data, true)))
       .catch(err => dispatch(getTagList(null, false)))
   }
@@ -168,7 +190,7 @@ export function fetchTagList() {
 
 export function fetchMostCommentPosts() {
   return dispatch => {
-    return Axios.get(API+"/posts?orderBy=comment_count&order=DESC&limit=3")
+    return Axios.get(API_URL+"/posts?orderBy=comment_count&order=DESC&limit=3")
       .then(data => dispatch(getMostCommentPosts(data.data, true)))
       .catch(err => dispatch(getMostCommentPosts(null, false)))
   }
@@ -176,7 +198,7 @@ export function fetchMostCommentPosts() {
 
 export function fetchMostViewPosts() {
   return dispatch => {
-    return Axios.get(API+"/posts?orderBy=view&order=DESC&limit=3")
+    return Axios.get(API_URL+"/posts?orderBy=view&order=DESC&limit=3")
       .then(data => dispatch(getMostViewPosts(data.data, true)))
       .catch(err => dispatch(getMostViewPosts(null, false)))
   }
@@ -187,7 +209,7 @@ export function fetchPostDetails(post_slug) {
     dispatch(getPostDetails(null, true, false))
     // dispatch(getCommentByPost(null, true, false));
 
-    return Axios.get(API+"/post/" + post_slug)
+    return Axios.get(API_URL+"/post/" + post_slug)
       .then(data => {
         dispatch(getPostDetails(data.data, false, true))
         // Fetch comments by post
@@ -206,7 +228,7 @@ export function fetchPostDetails(post_slug) {
 export function fetchRelatedPosts(tag, postID) {
   return dispatch => {
     dispatch(getRelatedPosts(null, true, false))
-    return Axios.get(`${API}/posts?orderBy=date&order=DESC&limit=3&related=${tag}&notin=${postID}`)
+    return Axios.get(`${API_URL}/posts?orderBy=date&order=DESC&limit=3&related=${tag}&notin=${postID}`)
       .then(data => dispatch(getRelatedPosts(data.data, false, true)))
       .catch(err => dispatch(getRelatedPosts(null, false, false)))
   }
@@ -216,7 +238,7 @@ export function fetchCommentByPost(post_slug) {
   return dispatch => {
     dispatch(getCommentByPost([], {}, true, false))
 
-    return Axios.get(`${API}/v2/comments/${post_slug}?limit=3`)
+    return Axios.get(`${API_URL}/v2/comments/${post_slug}?limit=3`)
       .then(data => {
         const rawData = data.data.result;
         const list = rawData.list
@@ -237,7 +259,7 @@ export function loadMoreComments(post_slug, next) {
   return dispatch => {
     dispatch(getMoreComments([], {}, true, loadmore))
 
-    return Axios.get(`${API}/v2/comments/${post_slug}?limit=3${!!next ? `&page=${next}` : ''}`)
+    return Axios.get(`${API_URL}/v2/comments/${post_slug}?limit=3${!!next ? `&page=${next}` : ''}`)
       .then(data => {
         const rawData = data.data.result;
         const list = rawData.list
@@ -257,7 +279,7 @@ export function fetchFeaturedPosts() {
   return dispatch => {
     dispatch(getFeaturedPosts(null, true, false))
 
-    return Axios.get(API+"/posts?orderBy=date&order=DESC&limit=10")
+    return Axios.get(API_URL+"/posts?orderBy=date&order=DESC&limit=10")
       .then(data => dispatch(getFeaturedPosts(data.data, false, true)))
       .catch(err => dispatch(getFeaturedPosts(null, false, false)))
   }
@@ -265,7 +287,7 @@ export function fetchFeaturedPosts() {
 
 export function fetchHomeVideos() {
   return dispatch => {
-    return Axios.get(API+"/videos/")
+    return Axios.get(API_URL+"/videos/")
       .then(data => {
         if(!!data.data.err) dispatch( getHomeVideos(null, false) );
         else dispatch( getHomeVideos(data.data.items, true) );
@@ -278,7 +300,7 @@ export function fetchHomeArchivePosts() {
   return dispatch => {
     dispatch(getHomeArchivePosts(null, true, false))
 
-    return Axios.get(API+"/posts?orderBy=date&order=DESC&limit=12")
+    return Axios.get(API_URL+"/posts?orderBy=date&order=DESC&limit=12")
       .then(data => dispatch(getHomeArchivePosts(data.data, false, true)))
       .catch(err => dispatch(getHomeArchivePosts(null, false, false)))
   }
@@ -288,7 +310,7 @@ export function fetchFooterRecentPosts() {
   return dispatch => {
     dispatch(getFooterRecentPosts(null, false))
 
-    return Axios.get(API+"/posts?orderBy=date&order=DESC&limit=3")
+    return Axios.get(API_URL+"/posts?orderBy=date&order=DESC&limit=3")
       .then(data => dispatch(getFooterRecentPosts(data.data, true)))
       .catch(err => dispatch(getFooterRecentPosts(null, false)))
   }
@@ -298,7 +320,7 @@ export function fetchPostsByCategory(category) {
   return dispatch => {
     dispatch(getPostsByCategory(null, true, false))
 
-    return Axios.get(API+"/category/"+category)
+    return Axios.get(API_URL+"/category/"+category)
       .then(data => dispatch(getPostsByCategory(data.data, false, true)))
       .catch(err => dispatch(getPostsByCategory(null, false, false)))
   }
@@ -308,7 +330,7 @@ export function fetchPostsByTag(tag) {
   return dispatch => {
     dispatch(getPostsByTag(null, true, false))
 
-    return Axios.get(API+"/tag/"+tag)
+    return Axios.get(API_URL+"/tag/"+tag)
       .then(data => { /*console.log(data);*/ dispatch(getPostsByTag(data.data, false, true)) })
       .catch(err => dispatch(getPostsByTag(null, false, false)))
   }
@@ -318,7 +340,7 @@ export function actionAddComment(data) {
   return dispatch => {
     // dispatch( addComment(null, false) );
 
-    return Axios(`${API}/comment/`, {
+    return Axios(`${API_URL}/comment/`, {
       method: "POST",
       data:  querystring.stringify(data)
     })
@@ -343,5 +365,43 @@ export function actionAddComment(data) {
         dispatch( getMoreComments( [], {}, false, true) )
       }, 500)
     })
+  }
+}
+
+export function actionSignIn(data) {
+  return dispatch => {
+    return Axios(API_URL+"/login", {
+      method: "POST",
+      data: querystring.stringify(data),
+      credentials: "include",
+      withCredentials: true
+    })
+    .then( data => {
+      dispatch(signin(data.data.status, data.data.result, data.data.token))
+    })
+    .catch( err => dispatch(signin(false, null, null)) )
+  }
+}
+
+export function actionSignUp(data) {
+  return dispatch => {
+    return Axios(API_URL+"/register", {
+      method: "POST",
+      data: querystring.stringify(data)
+    })
+    .then( data => dispatch(signup(data.data.status, data.data.result)) )
+    .catch( err => dispatch(signup(false, null)) )
+  }
+}
+
+export function actionAuthen() {
+  return dispatch => {
+    return Axios(API_URL+"/auth", {
+      mode: "GET",
+      credentials: "include",
+      withCredentials: true
+    })
+    .then( data => dispatch( authen(data.data.status, data.data.result) ) )
+    .catch( err => dispatch( authen(false, undefined) ) )
   }
 }

@@ -23,8 +23,11 @@ import {
   GET_RELATED_POSTS,
   ADD_COMMENT,
   LOAD_MORE_COMMENTS,
-  RESET_STATE,
-  LOADING,
+  // RESET_STATE,
+  // LOADING,
+  SIGN_IN,
+  SIGN_UP,
+  AUTHENTICATION
   
 } from '../Contants';
 
@@ -33,6 +36,8 @@ const defaultState = {
   loading: {},
   listComments: [],
   listCommentsInfo: {},
+  isLogged: false,
+  currentUser: undefined,
 }
 
 const blog = (state = defaultState, action) => {
@@ -158,20 +163,42 @@ const blog = (state = defaultState, action) => {
         fetchingCommentByPost: action.fetchingCommentByPost,
         getCommentByPostStatus: action.getCommentByPostStatus 
       }
-    
-    case RESET_STATE:
-      return {
-        defaultState : {
-          listComments: [],
-          listCommentsInfo: {}, 
-        }
-      }
 
-    case LOADING:
+    case SIGN_IN:
       return {
         ...state,
-        loadingObject: {...state.loading, ...action.loadingObject},
+        signinStatus: action.signinStatus,
+        signinStatusText: action.signinStatusText,
+        token: action.token,
       }
+
+    case SIGN_UP:
+      return {
+        ...state,
+        signupStatus: action.signupStatus,
+        signupStatusText: action.signupStatusText
+      }
+
+    case AUTHENTICATION:
+      return {
+        ...state,
+        isLogged: action.isLogged,
+        currentUser: action.currentUser,
+      }
+    
+    // case RESET_STATE:
+    //   return {
+    //     defaultState : {
+    //       listComments: [],
+    //       listCommentsInfo: {}, 
+    //     }
+    //   }
+
+    // case LOADING:
+    //   return {
+    //     ...state,
+    //     loadingObject: {...state.loading, ...action.loadingObject},
+    //   }
 
     default:
       return state;

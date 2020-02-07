@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require("cors")
 
 require('dotenv').config()
 const port = process.env.PORT || 5000
@@ -18,8 +19,16 @@ app.use(bodyParser.raw());
 
 app.use(bodyParser.json());
 
-let routes = require('./routes/blog.route');
-routes(app);
+app.use(cors({
+	origin: 'http://localhost:5002',
+	credentials: true
+}))
+
+let blogRoutes = require('./routes/blog.route');
+let authRoutes = require('./routes/auth.route');
+
+blogRoutes(app);
+authRoutes(app);
 
 app.use( (req, res, next) => {
 	// res.setHeader('Access-Control-Allow-Origin', '*');

@@ -6,7 +6,7 @@ import logoWhite from '../Assets/image/common/logo_white.png';
 import logoBlack from '../Assets/image/common/logo_black.png';
 
 import { connect } from 'react-redux';
-import { fetchCategoryList } from '../Actions'
+import { fetchCategoryList } from '../Actions';
 
 import loadingImage from '../Assets/image/common/loading-page.gif'
 
@@ -14,7 +14,6 @@ class Header extends Component {
 
   componentDidMount() {
     this.props.fetchCategoryList();
-    
     let header = document.getElementById('header');
     let headerHeight = header.clientHeight;
     let doc = document.documentElement;  
@@ -33,11 +32,11 @@ class Header extends Component {
         header.classList.remove("fake-headroom");
       }
     })
+    
   }
 
   render() {
-    let { categoryList, getCategoryListStatus } = this.props;
-
+    let { categoryList, getCategoryListStatus, isLogged, currentUser } = this.props;
     let dayNow = new Date();
     let day = dayNow.toLocaleString('vi-VN', { weekday: 'long' });
     let date = dayNow.getDate();
@@ -55,27 +54,26 @@ class Header extends Component {
               <div className="header-section-box">
                 <div className="header-left">
                   <p><span className="date">{day}</span><span className="time"> . {date} {month} . {year}</span></p>
-                  {/* <div className="social">
-                    <Link to="#" className="icons-sm fb-ic"><i className="fab fa-facebook"></i></Link>
-                    <Link to="#" className="icons-sm tw-ic"><i className="fab fa-twitter"></i></Link>
-                    <Link to="#" className="icons-sm inst-ic"><i className="fab fa-instagram"> </i></Link>
-                    <Link to="#" className="icons-sm tmb-ic"><i className="fab fa-tumblr"> </i></Link>
-                    <Link to="#" className="icons-sm rss-ic"><i className="fa fa-rss"> </i></Link>
-                  </div> */}
                 </div>
-                {/* <div className="logo">
-                  <Link to="/"><img src={logoWhite} alt="SpaceD" /></Link>
-                </div> */}
                 <div className="header-right">
-                  <ul className="header-auth">
-                    <li><Link to="#">Login</Link></li>
-                    <li><Link to="#">Register</Link></li>
-                  </ul>
+                  {
+                    isLogged
+                    ? <div className="header-user">
+                        <p data-toggle="dropdown" className="dropdown-toggle"><i className="fas fa-user"></i></p>
+                        <ul className="action">
+                          <li><span> Hi! {currentUser.name}</span></li>
+                          <li><Link to="/admin/user/me">Change Infomation</Link></li>
+                          <li><span>Logout</span></li>
+                        </ul>
+                      </div>
+                    : <ul className="header-auth">
+                        <li><Link to="/auth">Login</Link></li>
+                        <li><Link to="/auth/signup">Register</Link></li>
+                      </ul>
+                  }
 
                   <div className="header-search">
-                    <Link to="#" data-toggle="dropdown" className="dropdown-toggle">
-                      <i className="fa fa-search"></i>
-                    </Link>
+                    <p data-toggle="dropdown" className="dropdown-toggle"><i className="fa fa-search"></i></p>
                     <form className="header-search-form">
                       <input type="text" className="header-search-input" placeholder="Type Something" />
                       <button type="submit" className="header-search-button">Search</button>
@@ -104,7 +102,10 @@ class Header extends Component {
 
 const mapStateToProps = (state) => ({
   categoryList: state.categoryList,
-  getCategoryListStatus: state.getCategoryListStatus
+  getCategoryListStatus: state.getCategoryListStatus,
+
+  isLogged: state.isLogged,
+  currentUser: state.currentUser
 })
 
 const mapDispatchToProps = dispatchEvent => {

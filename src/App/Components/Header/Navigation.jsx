@@ -7,7 +7,7 @@ export default class Navigation extends Component {
     let { categoryList } = this.props;
     return (
       <nav className="navbar">
-        <div className="container">
+        {/* <div className="container"> */}
           <ul className="navbar-nav">
             <li><NavLink exact={true} activeClassName="active" to="/">Home</NavLink></li>
             {
@@ -16,7 +16,7 @@ export default class Navigation extends Component {
                 : ''
             }
           </ul>
-        </div>
+        {/* </div> */}
       </nav>
     )
   }

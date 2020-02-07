@@ -1,59 +1,6 @@
 const DB = require('../DB/DB');
 const Youtube = require('../Youtube');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const jwt = require('jsonwebtoken');
-
-let postQuery = [
-  {
-    $lookup: {
-      from: 'categories',
-      localField: 'category',
-      foreignField: 'category_id',
-      as: 'category'
-    }
-  },
-  {
-    $lookup: {
-      from: 'comments',
-      localField: 'post_id',
-      foreignField: 'post_id',
-      as: 'comments'
-    }
-  },
-  {
-    $lookup: {
-      from: 'users',
-      localField: 'author',
-      foreignField: 'user_id',
-      as: 'author'
-    }
-  },
-  {
-    $lookup: {
-      from: 'hashtags',
-      localField: 'tags',
-      foreignField: 'hashtag_id',
-      as: 'tags',
-    }
-  }
-]
-
-const getNextID = (db, collectionName) => {
-  return new Promise((resolve, reject) => {
-    let counters = db.collection("counters");
-    return counters.findOneAndUpdate(
-      { field: `${collectionName}` },
-      { $inc: { value: 1 } },
-      { new: true },
-      (err, response) => {
-        if (err) reject(err);
-        else resolve(response);
-      }
-    );
-  })
-}
-
+const { getNextID, postQuery } = require('./common.controller');
 
 module.exports = {
   home: (req, res) => {
@@ -707,84 +654,7 @@ module.exports = {
     .catch( err => res.json({ status: false, errCode: null, errorMessage: err }) )
   },
 
-  auth: (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-
-    let { username, password } = req.body;
-
-    DB.open()
-    .then( db => db.collection("users") )
-    .then( users => {
-      users.findOne( {username: username}, (err, user) => {
-        if(err) res.status(404).json({ status: false, error: "Something went wrong" });
-        else if(!user) res.status(422).json({ status: false, error: "User not found!" })
-        else {          
-          bcrypt.compare(password, user.password)
-          .then( response => {
-            if(response === true) {
-              jwt.sign(user, 'key', (err, token) => {
-                if(err) res.status(404).json({ status: false, error: "Something went wrong" });
-                else {
-                  res.cookie("token", token, {
-                    maxAge: 3 * 24 * 60 * 60 * 1000,
-                    httpOnly: true,
-                    //secure: true;
-                  })
-                  res.status(200).json({ status: true, result: "Login Successful!", token: token });
-                }
-              })
-            }
-            else res.status(200).json({ status: false, error: "Wrong passwrod!" })
-          } )
-          .catch( err => res.status(200).json({ status: false, error: err }) )
-        }
-      })
-    })
-  },
-
-  registerAccount: (req, res, next) => {
-    
-  },
-
   test: (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5002');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
 
-    let { username, password, nicename, email } = req.body;
-
-    DB.open()
-    .then( db => {
-      const users = db.collection("users");
-
-      getNextID(db, "user_id")
-      .then( userID => {
-        if(userID.lastErrorObject.updatedExisting) {
-          const data = {
-            user_id: userID.value.value,
-            username: username,
-            password: password,
-            nicename: nicename,
-            email: email,
-            user_image: "",
-            active_key: "",
-            role: 1,
-            meta: {}
-          }
-          // users.insertOne(data, (err, result) => {
-          //   if( err ) res.status(404).json({status: false, result: "Something went wrong."})
-          //   else {
-              
-          //   }
-          // })
-
-          users.update( {username: username}, { $set: data }, { upsert: true }, (err, user) => {
-            if(err) res.status(404).json({ status: false, error: "Something went wrong." });
-            // else if(user) res.status(422).json({ status: false, error: "User already exist!" })
-            else res.status(200).json(user)
-          })
-        }
-      })
-    })
   }
 }

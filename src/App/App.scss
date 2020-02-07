@@ -72,6 +72,15 @@ body {
   border-bottom: 1px solid #CCC;
   z-index: 9990;
 
+  .dropdown-toggle {
+    font-size: 18px;
+    color: #FFF;
+    cursor: pointer;
+    padding: 0 5px;
+    margin: 0 5px;
+    pointer-events: unset;
+  }
+
   * {
     transition: all .3s;
   }
@@ -128,6 +137,12 @@ body {
     display: flex;
     align-items: center;
 
+    .user {
+      font-size: 13px;
+      color: #FFF;
+      margin-right: 10px;
+    }
+
     .lang i {
       margin-left: 5px;
     }
@@ -161,6 +176,55 @@ body {
     }
   }
 
+  &-user {
+    position: relative;
+    cursor: pointer;
+    
+    .action {
+      border: 1px solid #007aff;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #007aff;
+      visibility: hidden;
+      opacity: 0;
+      height: 0;
+
+      span, a {
+        min-width: 200px;
+        text-align-last: center;
+        font-weight: bold;
+        display: block;
+        padding: 10px 20px;
+        background-color: #007aff;
+        color: #FFF;
+
+        &:hover {
+          color: #000;
+          background-color: #FFF;
+        }
+      }
+      li {
+        border-top: 1px solid #FFF;
+        &:first-child {
+          border-top: none;
+        }
+      }
+    }
+
+    &.is-open {
+      .action {
+        visibility: visible;
+        opacity: 1;
+        height: 118px;
+      }
+    }
+  }
+
   &-search {
     width: 30px;
     height: 30px;
@@ -170,7 +234,15 @@ body {
     position: relative;
     transition: all .3s ease-in-out;
 
-    &:focus-within {
+    // &:focus .header-search-form {
+    //   top: 0;
+    //   opacity: 1;
+    //   margin-top: 50px;
+    //   transform: translateY(0);
+    //   visibility: visible;
+    // }
+
+    &.is-open {
       .header-search-form {
         top: 0;
         opacity: 1;
@@ -197,13 +269,13 @@ body {
       visibility: hidden;
       transition: .3s;
 
-      &::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 50px;
-        top: -50px;
-      }
+      // &::before {
+      //   content: '';
+      //   position: absolute;
+      //   width: 100%;
+      //   height: 50px;
+      //   top: -50px;
+      // }
 
       * {
         height: 100%;
@@ -233,11 +305,6 @@ body {
       background-color: #337ab7;
       border-color: #2e6da4;
       width: 30%;
-    }
-
-    i {
-      font-size: 18px;
-      color: #7d7d7d;
     }
   }
   
