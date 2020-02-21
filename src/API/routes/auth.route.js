@@ -8,5 +8,7 @@ module.exports = app => {
 
   app.get('/auth', authCtrl.auth)
 
+  app.get('/logout', authCtrl.logout)
+
   app.post('/test', authCtrl.test)
 }

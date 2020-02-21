@@ -12,6 +12,7 @@ function Authentication( props ) {
     isLogged: state.isLogged,
     currentUser: state.currentUser,
     
+    signingIn: state.signingIn,
     signinStatus: state.signinStatus,
     signinStatusText: state.signinStatusText,
     token: state.token,
@@ -62,7 +63,7 @@ function Authentication( props ) {
 
   return isLogged
   ? currentUser.role === 0 ? <Redirect to="/admin" /> : <Redirect to="/" />
-  :  <div className="authen">
+  : <div className="authen">
       <h3 className="go-back" onClick={() => goBack()}><i className="fal fa-arrow-left"></i> Go back</h3>
       <h2>Sign in / up</h2>
       <div className={`container${activeForm.toLowerCase() === "signup" ? " right-panel-active" : ""}`} id="container">

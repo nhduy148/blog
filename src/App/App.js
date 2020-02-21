@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import './App.scss';
 
@@ -12,16 +12,15 @@ import Tags from './Containers/Tags';
 import Authentication from './Containers/Authentication';
 
 import { actionAuthen } from './Actions';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 function App() {
 
   const dispatch = useDispatch();
 
-  const props = useSelector( state => ({
-    isLogged: state.isLogged
-  }))
+  const reduxProps = useSelector( state =>  ({isLogged: state.isLogged}) )
 
-  let { isLogged } = props;
+  let { isLogged } = reduxProps;
   
   useEffect(() => {
     dispatch(actionAuthen());
@@ -29,18 +28,36 @@ function App() {
   [dispatch, isLogged])
 
   return (
-      <ScrollToTop>
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/auth' component={Authentication} />
-          <Route exact path='/auth/:mode' component={Authentication} />
-          <Route path='/category/:category' component={Category} />
-          <Route path='/tag/:tag' component={Tags} />
-          <Route path='/post/:slug' component={Single} />
-          <Route exact path='*' component={Page404} />
-        </Switch>
-      </ScrollToTop>
+    <Route render={({ location }) => {
+      const { pathname } = location;
+    
+      return (
+        <TransitionGroup component="div" className="app" id="App">
+          <CSSTransition
+            key={pathname}
+            classNames="app-wrapper"
+            timeout={100}
+            unmountOnExit
+            appear
+          >
+            <div>
+              <ScrollToTop>
+                <Switch>
+                  <Route exact path='/' component={Home} />
+                  <Route exact path='/auth' component={Authentication} />
+                  <Route exact path='/auth/:mode' component={Authentication} />
+                  <Route path='/category/:category' component={Category} />
+                  <Route path='/tag/:tag' component={Tags} />
+                  <Route path='/post/:slug' component={Single} />
+                  <Route exact path='*' component={Page404} />
+                </Switch>
+              </ScrollToTop>
+            </div>
+          </CSSTransition>
+        </TransitionGroup>
+      )
+    }}/>
   );
 }
 
-export default App;
+export default withRouter(App);

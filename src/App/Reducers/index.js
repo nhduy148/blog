@@ -27,7 +27,8 @@ import {
   // LOADING,
   SIGN_IN,
   SIGN_UP,
-  AUTHENTICATION
+  AUTHENTICATION,
+  LOG_OUT,
   
 } from '../Contants';
 
@@ -37,7 +38,7 @@ const defaultState = {
   listComments: [],
   listCommentsInfo: {},
   isLogged: false,
-  currentUser: undefined,
+  currentUser: null,
 }
 
 const blog = (state = defaultState, action) => {
@@ -167,6 +168,7 @@ const blog = (state = defaultState, action) => {
     case SIGN_IN:
       return {
         ...state,
+        signingIn: action.signingIn,
         signinStatus: action.signinStatus,
         signinStatusText: action.signinStatusText,
         token: action.token,
@@ -184,6 +186,13 @@ const blog = (state = defaultState, action) => {
         ...state,
         isLogged: action.isLogged,
         currentUser: action.currentUser,
+      }
+
+    case LOG_OUT:
+      return {
+        ...state,
+        isLogged: false,
+        currentUser: null,
       }
     
     // case RESET_STATE:

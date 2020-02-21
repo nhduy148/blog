@@ -3,8 +3,9 @@ import { withRouter } from 'react-router-dom';
 
 class ScrollToTop extends Component {
   componentDidUpdate(prevProps) {
+    const app = document.getElementById("App")
     if (this.props.location !== prevProps.location) {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      app.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
       // window.scrollTo(0,0)
     }
   }

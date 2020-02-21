@@ -19,7 +19,8 @@ import {
   // LOADING,
   SIGN_IN,
   SIGN_UP,
-  AUTHENTICATION
+  AUTHENTICATION,
+  LOG_OUT
 
 }
 from '../Contants';
@@ -150,8 +151,9 @@ export const getMoreComments = (listComments, listCommentsInfo, fetchingCommentB
   getCommentByPostStatus
 })
 
-export const signin = (signinStatus, signinStatusText, token) => ({
+export const signin = ( signingIn, signinStatus, signinStatusText, token ) => ({
   type: SIGN_IN,
+  signingIn,
   signinStatus,
   signinStatusText,
   token
@@ -167,6 +169,10 @@ export const authen = ( isLogged, currentUser ) => ({
   type: AUTHENTICATION,
   isLogged,
   currentUser
+})
+
+export const logout = () => ({
+  type: LOG_OUT
 })
 
 // ********************************************************************************************************************************** //
@@ -370,6 +376,7 @@ export function actionAddComment(data) {
 
 export function actionSignIn(data) {
   return dispatch => {
+    dispatch( signin(true, false, null, null) )
     return Axios(API_URL+"/login", {
       method: "POST",
       data: querystring.stringify(data),
@@ -377,9 +384,9 @@ export function actionSignIn(data) {
       withCredentials: true
     })
     .then( data => {
-      dispatch(signin(data.data.status, data.data.result, data.data.token))
+      dispatch(signin(true, data.data.status, data.data.result, data.data.token))
     })
-    .catch( err => dispatch(signin(false, null, null)) )
+    .catch( err => dispatch(signin(false, false, null, null)) )
   }
 }
 
@@ -403,5 +410,17 @@ export function actionAuthen() {
     })
     .then( data => dispatch( authen(data.data.status, data.data.result) ) )
     .catch( err => dispatch( authen(false, undefined) ) )
+  }
+}
+
+export function actionLogOut() {
+  return async dispatch => {
+    const data = await Axios(API_URL+"/logout", {
+      mode: "GET",
+      credentials: "include",
+      withCredentials: true
+    })
+    if( data.data.status === true ) dispatch( logout() )
+    console.log(data.data)
   }
 }

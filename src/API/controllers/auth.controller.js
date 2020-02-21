@@ -105,12 +105,13 @@ module.exports = {
       });
     }
     else {
-      res.status(401).json({status: false, result: { error: "Token is not valid yet. Please log in again."} });
+      res.json({status: false, result: { error: "Token is not valid yet. Please log in again."} });
     }
   },
 
   logout: (req, res) => {
     res.clearCookie("token");
+    res.json({ status: true, result: { error: "Token has been removed."} })
   },
 
   test: (req, res) => {

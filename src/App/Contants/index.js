@@ -19,6 +19,6 @@ export const LOADING = 'LOADING';
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
 export const AUTHENTICATION = 'AUTHENTICATION';
-// export const XXX = 'XXX';
+export const LOG_OUT = 'LOG_OUT';
 // export const XXX = 'XXX';
 // export const XXX = 'XXX';

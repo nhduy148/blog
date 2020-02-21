@@ -1,29 +1,39 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group'
+
 import Navigation from '../Components/Header/Navigation';
 
 import logoWhite from '../Assets/image/common/logo_white.png';
 import logoBlack from '../Assets/image/common/logo_black.png';
 
 import { connect } from 'react-redux';
-import { fetchCategoryList } from '../Actions';
+import { fetchCategoryList, actionLogOut } from '../Actions';
 
 import loadingImage from '../Assets/image/common/loading-page.gif'
 
 class Header extends Component {
 
+  state = {
+    showUserAction: false,
+    showSearchAction: false,
+  }
+
   componentDidMount() {
+
     this.props.fetchCategoryList();
+
+    const app = document.getElementById("App")
     let header = document.getElementById('header');
     let headerHeight = header.clientHeight;
-    let doc = document.documentElement;  
-    let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
+    let top = app.scrollTop;
     
     if( top > headerHeight ) header.classList.add("is-fixed");
     else header.classList.remove("is-fixed");
 
-    window.addEventListener("scroll", () => {
-      let top = ( window.pageYOffset || doc.scrollTop )  - ( doc.clientTop || 0 );
+    app.addEventListener("scroll", () => {
+      let top = app.scrollTop
+
       if( top > headerHeight ) { 
         header.classList.add("is-fixed"); 
         header.classList.add("fake-headroom") }
@@ -32,10 +42,40 @@ class Header extends Component {
         header.classList.remove("fake-headroom");
       }
     })
+  }
+
+  componentDidUpdate() {
+    const app = document.getElementById("App")
+    let { showSearchAction, showUserAction } = this.state;
     
+    if( showSearchAction || showUserAction ) {
+      app.addEventListener( "scroll", () => {
+        this.setState({
+          showSearchAction: false,
+          showUserAction: false,
+        })
+      })
+    }
+  }
+
+
+
+  toggleUser = () => {
+    this.setState({
+      showUserAction: !this.state.showUserAction,
+      showSearchAction: false
+    });
+  }
+
+  toggleSearch = () => {
+    this.setState({
+      showSearchAction: !this.state.showSearchAction,
+      showUserAction: false
+    });
   }
 
   render() {
+    let { showSearchAction, showUserAction } = this.state;
     let { categoryList, getCategoryListStatus, isLogged, currentUser } = this.props;
     let dayNow = new Date();
     let day = dayNow.toLocaleString('vi-VN', { weekday: 'long' });
@@ -59,12 +99,20 @@ class Header extends Component {
                   {
                     isLogged
                     ? <div className="header-user">
-                        <p data-toggle="dropdown" className="dropdown-toggle"><i className="fas fa-user"></i></p>
-                        <ul className="action">
-                          <li><span> Hi! {currentUser.name}</span></li>
-                          <li><Link to="/admin/user/me">Change Infomation</Link></li>
-                          <li><span>Logout</span></li>
-                        </ul>
+                        <p data-toggle="dropdown" className="dropdown-toggle" onClick={() => this.toggleUser()}><i className="fas fa-user"></i></p>
+                        <CSSTransition
+                          in={showUserAction}
+                          timeout={100}
+                          classNames="action"
+                          unmountOnExit
+                          appear
+                        >
+                          <ul className="action">
+                            <li><span> Hi! {currentUser.name}</span></li>
+                            <li><Link to="/admin/user/me">Change Infomation</Link></li>
+                            <li><span onClick={() => this.props.actionLogOut()}>Logout</span></li>
+                          </ul>
+                        </CSSTransition>
                       </div>
                     : <ul className="header-auth">
                         <li><Link to="/auth">Login</Link></li>
@@ -73,11 +121,19 @@ class Header extends Component {
                   }
 
                   <div className="header-search">
-                    <p data-toggle="dropdown" className="dropdown-toggle"><i className="fa fa-search"></i></p>
-                    <form className="header-search-form">
-                      <input type="text" className="header-search-input" placeholder="Type Something" />
-                      <button type="submit" className="header-search-button">Search</button>
-                    </form>
+                    <p data-toggle="dropdown" className="dropdown-toggle" onClick={()=>this.toggleSearch()}><i className="fa fa-search"></i></p>
+                    <CSSTransition
+                      in={showSearchAction}
+                      classNames="action"
+                      timeout={100}
+                      unmountOnExit
+                      appear
+                    >
+                      <form className="action">
+                        <input type="text" className="header-search-input" placeholder="Type Something" />
+                        <button type="submit" className="header-search-button">Search</button>
+                      </form>
+                    </CSSTransition>
                   </div>
                 </div>
               </div>
@@ -112,6 +168,9 @@ const mapDispatchToProps = dispatchEvent => {
   return {
     fetchCategoryList: () => {
       dispatchEvent(fetchCategoryList());
+    },
+    actionLogOut: () => {
+      dispatchEvent( actionLogOut() )
     }
   }
 }
