@@ -21,8 +21,8 @@ module.exports = {
     .then( db => db.collection("users") )
     .then( users => {
       users.findOne( {username: username}, (err, user) => {
-        if(err) res.status(404).json({ status: false, error: err });
-        else if(!user) res.status(422).json({ status: false, error: "User not found!" })
+        if(err) res.json({ status: false, result: err });
+        else if(!user) res.json({ status: false, result: "User not found!" })
         else {
           // const isAdmin = user.role === 0 ? true : false;
           bcrypt.compare(password, user.password)
@@ -37,9 +37,9 @@ module.exports = {
               })
               res.status(200).json({ status: true, result: "Login Successful!", token: token });
             }
-            else res.status(200).json({ status: false, error: "Wrong passwrod!" })
+            else res.status(200).json({ status: false, result: "Wrong passwrod!" })
           } )
-          .catch( err => res.json({ status: false, error: err }) )
+          .catch( err => res.json({ status: false, result: err }) )
         }
       })
     })

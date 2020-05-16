@@ -376,14 +376,14 @@ export function actionAddComment(data) {
 
 export function actionSignIn(data) {
   return dispatch => {
-    dispatch( signin(true, false, null, null) )
+    dispatch( signin(true, null, null, null) )
     return Axios(API_URL+"/login", {
       method: "POST",
       data: querystring.stringify(data),
       credentials: "include",
       withCredentials: true
     })
-    .then( data => {
+    .then( data => {      
       dispatch(signin(true, data.data.status, data.data.result, data.data.token))
     })
     .catch( err => dispatch(signin(false, false, null, null)) )

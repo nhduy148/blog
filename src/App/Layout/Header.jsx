@@ -42,10 +42,8 @@ class Header extends Component {
         header.classList.remove("fake-headroom");
       }
     })
-  }
 
-  componentDidUpdate() {
-    const app = document.getElementById("App")
+    
     let { showSearchAction, showUserAction } = this.state;
     
     if( showSearchAction || showUserAction ) {
@@ -57,8 +55,6 @@ class Header extends Component {
       })
     }
   }
-
-
 
   toggleUser = () => {
     this.setState({

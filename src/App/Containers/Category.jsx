@@ -15,16 +15,16 @@ class Category extends Component {
     this.props.fetchPostsByCategory(category);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    let oldCategory = this.props.match.params.category;
-    let newCategory = nextProps.match.params.category;
-    if (oldCategory !== newCategory) this.props.fetchPostsByCategory(newCategory);
+  componentDidUpdate(prevProps) {
+    let currentCate = this.props.match.params.category;
+    let oldCate = prevProps.match.params.category;
+    if (currentCate !== oldCate) this.props.fetchPostsByCategory(currentCate);
   }
 
   render() {
     let post_layout = "vertical";
     let { categoryPosts, fetchingPostsByCategory, getPostsByCategoryStatus } = this.props;
-    let banner_title = !!categoryPosts && categoryPosts.name ? `Category : ${categoryPosts.name}` : categoryPosts;
+    let banner_title = !!categoryPosts && `Category : ${categoryPosts.name}`;
 
     return (
       <>

@@ -21,7 +21,7 @@ function Authentication( props ) {
     signupStatusText: state.signupStatusText,
   }))
 
-  let { isLogged, currentUser, signinStatus } = reduxProps;
+  let { isLogged, currentUser, signinStatus, signinStatusText } = reduxProps;
 
   let form = props.match.params.mode;  
   form = form || "signin";
@@ -60,6 +60,8 @@ function Authentication( props ) {
       dispatch(actionAuthen());
     }
   }, [dispatch, signinStatus])
+  
+  
 
   return isLogged
   ? currentUser.role === 0 ? <Redirect to="/admin" /> : <Redirect to="/" />
@@ -94,6 +96,9 @@ function Authentication( props ) {
             <span>or use your account</span>
             <input type="text" placeholder="Username" name="username" required />
             <input type="password" placeholder="Password" name="password" required />
+            {
+              signinStatus === false && <p style={{color: "red"}}>{signinStatusText}</p>
+            }
             <Link to="#">Forgot your password?</Link>
             <button>Sign In</button>
           </form>
